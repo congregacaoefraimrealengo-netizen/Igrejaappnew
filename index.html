@@ -3628,6 +3628,7 @@ function doLoginAdm(){
       const cpScreen = document.getElementById('change-pass-screen');
       cpScreen.style.display='flex';
       cpScreen._userId = user.id;
+      cpScreen._userCpf = user.cpf;
     } else {
       loginSuccess(user);
     }
@@ -3706,7 +3707,7 @@ function confirmarCriarAdmInicial(){
   if(USERS_DB.find(u => u.cpf.toLowerCase() === login)){ erro.style.display='block'; erro.textContent='⚠️ Este usuário já existe!'; return; }
 
   // Cria o novo ADM
-  USERS_DB.push({id: nextUserId++, cpf: login, nome, senha, role: 'adm', primeiroAcesso: false});
+  USERS_DB.push({id: nextUserId++, cpf: login, nome, senha, role: 'adm', primeiroAcesso: true});
   salvarLS();
   // 🔧 FIX: força envio imediato para a nuvem (currentUser ainda é null aqui,
   // então salvarLS sozinho NÃO dispara o sync — sem isso o ADM nunca chega no Sheets)
@@ -3790,6 +3791,11 @@ function confirmarTrocaSenha(){
   user.senha = p1;
   user.primeiroAcesso = false;
   salvarLS();
+  // 🔧 Força push imediato da nova senha para a nuvem (currentUser ainda é null,
+  // então salvarLS sozinho não dispara o sync e a senha ficaria só neste navegador)
+  if (typeof syncEnviarParaNuvem === 'function' && typeof GAS_WEBAPP_URL !== 'undefined' && GAS_WEBAPP_URL) {
+    try { syncEnviarParaNuvem(); } catch(e) { console.warn('Push da troca de senha falhou:', e); }
+  }
   screen.style.display='none';
   document.getElementById('new-pass1').value='';
   document.getElementById('new-pass2').value='';
