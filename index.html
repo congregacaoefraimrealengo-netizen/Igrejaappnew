@@ -62,38 +62,6 @@ body.not-master .master-only { display: none !important; }
 .qa-item:hover { background: var(--primary); color: white; }
 
 /* Dark Mode Overrides */
-
-/* === DARK MODE: campos de formulário legíveis === */
-body.dark-mode input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="range"]):not([type="submit"]):not([type="button"]),
-body.dark-mode textarea,
-body.dark-mode select,
-body.dark-mode .form-group input,
-body.dark-mode .form-group textarea,
-body.dark-mode .form-group select,
-body.dark-mode .church-name-input {
-  background: #1a2233 !important;
-  color: #f1f5f9 !important;
-  border-color: rgba(255,255,255,0.12) !important;
-}
-body.dark-mode input::placeholder,
-body.dark-mode textarea::placeholder {
-  color: #94a3b8 !important;
-  opacity: 1;
-}
-body.dark-mode input:focus,
-body.dark-mode textarea:focus,
-body.dark-mode select:focus {
-  background: #222c40 !important;
-  border-color: #6366f1 !important;
-  box-shadow: 0 0 0 3px rgba(99,102,241,0.2) !important;
-}
-body.dark-mode select option { background: #1a2233; color: #f1f5f9; }
-body.dark-mode label { color: #e2e8f0 !important; }
-body.dark-mode .card * { color: inherit; }
-body.dark-mode input[type="date"],
-body.dark-mode input[type="time"],
-body.dark-mode input[type="datetime-local"] { color-scheme: dark; }
-
 body.dark-mode { background: #0b0f19; color: #e2e8f0; }
 body.dark-mode .card { background: #161b2a; border-color: rgba(255,255,255,0.05); color: white; }
 body.dark-mode #topbar { background: #0f172a; border-color: rgba(255,255,255,0.05); color: white; }
@@ -1983,6 +1951,39 @@ body.dark-mode .qa-btn-compact { background: #1e293b; color: #818cf8; border-col
 
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style id="dark-fix-v2">
+body.dark-mode input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="range"]):not([type="submit"]):not([type="button"]):not([type="file"]),
+body.dark-mode textarea,
+body.dark-mode select {
+  background: #1a2233 !important;
+  background-color: #1a2233 !important;
+  color: #f1f5f9 !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  -webkit-text-fill-color: #f1f5f9 !important;
+  caret-color: #f1f5f9 !important;
+}
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder { color:#94a3b8 !important; opacity:1 !important; -webkit-text-fill-color:#94a3b8 !important; }
+body.dark-mode input:focus, body.dark-mode textarea:focus, body.dark-mode select:focus {
+  background:#222c40 !important; background-color:#222c40 !important;
+  border-color:#6366f1 !important; box-shadow:0 0 0 3px rgba(99,102,241,0.25) !important; outline:none !important;
+}
+body.dark-mode select option, body.dark-mode select optgroup { background:#1a2233 !important; color:#f1f5f9 !important; }
+body.dark-mode input[type="date"], body.dark-mode input[type="time"], body.dark-mode input[type="datetime-local"],
+body.dark-mode input[type="month"], body.dark-mode input[type="week"] { color-scheme: dark !important; }
+body.dark-mode input:-webkit-autofill, body.dark-mode textarea:-webkit-autofill, body.dark-mode select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #1a2233 inset !important; -webkit-text-fill-color:#f1f5f9 !important; caret-color:#f1f5f9 !important;
+}
+body.dark-mode label, body.dark-mode .form-group label, body.dark-mode .lf-group label { color:#e2e8f0 !important; }
+body.dark-mode .card, body.dark-mode .modal, body.dark-mode .confirm-box, body.dark-mode .stat-card,
+body.dark-mode .evento-card, body.dark-mode .patrim-card, body.dark-mode .celula-card, body.dark-mode .comuni-card,
+body.dark-mode .escala-item, body.dark-mode .agenda-item, body.dark-mode .quick-btn, body.dark-mode .tab {
+  background:#161b2a !important; background-color:#161b2a !important; color:#f1f5f9 !important; border-color:rgba(255,255,255,0.08) !important;
+}
+body.dark-mode .perfil-field span { background:#1a2233 !important; color:#f1f5f9 !important; }
+</style>
+
 </head>
 <body>
 <div id="splash-overlay" style="position:fixed; inset:0; z-index:10000; background:#000; display:flex; justify-content:center; align-items:center;">
