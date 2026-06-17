@@ -2998,7 +2998,7 @@ window.addEventListener('load', () => {
   </div>
 
   <!-- O QUE OS MEMBROS PODEM VER -->
-  <div class="card">
+  <div class="card master-only">
     <h3>👥 Visibilidade para Membros</h3>
     <p style="font-size:13px;color:var(--cinza);margin-bottom:16px;">Defina quais seções e informações os membros podem visualizar ao fazer login.</p>
 
@@ -3076,7 +3076,7 @@ window.addEventListener('load', () => {
   </div>
 
   <!-- ACESSO RÁPIDO -->
-  <div class="card">
+  <div class="card master-only">
     <h3>🔑 Gestão de Usuários</h3>
     <div class="alert alert-verde" style="margin-bottom:14px">🔑 Acesse <strong>Administração → Usuários</strong> para gerenciar usuários, permissões, backup e restauração.</div>
     <button class="btn btn-primary" onclick="showPage('usuarios')">Ir para Usuários & Permissões →</button>
@@ -4022,6 +4022,7 @@ function quickLogin(role){
 
 function loginSuccess(user){
   currentUser = user;
+  try{ aplicarMasterOnly(); }catch(e){}
   localStorage.setItem('session_user_id', String(user.id));
   document.getElementById('login-screen').style.display='none';
   document.getElementById('app').classList.add('visible');
@@ -4106,8 +4107,8 @@ function renderUsuarios(){
   const lista = document.getElementById('lista-usuarios');
   if(!lista) return;
   const isMaster = currentUser && currentUser.cpf === 'admin';
-  // Mostra/esconde botões de backup somente para o admin master
-  document.querySelectorAll('#page-usuarios .master-only').forEach(el=>{
+  // Mostra/esconde elementos somente para o admin master (usuarios + configurações)
+  document.querySelectorAll('#page-usuarios .master-only, #page-configuracoes .master-only').forEach(el=>{
     el.style.display = isMaster ? '' : 'none';
   });
   lista.innerHTML = USERS_DB
@@ -4124,12 +4125,20 @@ function renderUsuarios(){
         <div class="li-sub">${'Login: '+u.cpf} ${u.primeiroAcesso?'· <span style="color:var(--ouro)">⚠️ Aguardando troca de senha</span>':''}</div>
       </div>
       <span class="tag ${u.role==='adm'?'tag-ouro':'tag-azul'}">${u.role==='adm'?'ADM':'Membro'}</span>
-      ${u.cpf === 'admin' ? '<span style="font-size:11px;color:#AAA;margin-left:8px">🔒 protegido</span>' : currentUser.id === u.id ? '<span style="font-size:11px;color:#AAA;margin-left:8px">(você)</span>' : isMaster ? `
+      ${u.cpf === 'admin' ? '<span style="font-size:11px;color:#AAA;margin-left:8px">🔒 protegido</span>' : (isMaster || currentUser.id === u.id) ? `
       <div style="display:flex;gap:6px;margin-left:8px">
-        <button class="btn btn-secondary btn-sm" onclick="abrirModalUsuario(${u.id})" title="Editar">✏️</button>
-        <button class="btn btn-danger btn-sm" onclick="excluirUsuario(${u.id})" title="Excluir">🗑️</button>
+        <button class="btn btn-secondary btn-sm" onclick="abrirModalUsuario(${u.id})" title="${currentUser.id === u.id && !isMaster ? 'Trocar minha senha' : 'Editar'}">✏️</button>
+        ${isMaster && currentUser.id !== u.id ? `<button class="btn btn-danger btn-sm" onclick="excluirUsuario(${u.id})" title="Excluir">🗑️</button>` : ''}
       </div>` : '<span style="font-size:11px;color:#AAA;margin-left:8px">🔒 somente o master pode editar</span>'}
     </div>`).join('') || '<p style="color:#AAA;font-size:13px">Nenhum usuário cadastrado.</p>';
+}
+
+
+function aplicarMasterOnly(){
+  const isMaster = currentUser && currentUser.cpf === 'admin';
+  document.querySelectorAll('.master-only').forEach(el=>{
+    el.style.display = isMaster ? '' : 'none';
+  });
 }
 
 function abrirModalUsuario(id){
@@ -4331,6 +4340,7 @@ function importarBackup(event){
 const ADM_PAGES = ['secretaria','tesouraria','patrimonio','relatorios','configuracoes','usuarios','aniversariantes'];
 
 function showPage(name, navEl){
+  try{ aplicarMasterOnly(); }catch(e){}
   if(ADM_PAGES.includes(name) && currentUser && currentUser.role!=='adm'){
     toast('🔒 Acesso restrito ao administrador.'); return;
   }
