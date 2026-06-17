@@ -1951,39 +1951,6 @@ body.dark-mode .qa-btn-compact { background: #1e293b; color: #818cf8; border-col
 
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<style id="dark-fix-v2">
-body.dark-mode input:not([type="checkbox"]):not([type="radio"]):not([type="color"]):not([type="range"]):not([type="submit"]):not([type="button"]):not([type="file"]),
-body.dark-mode textarea,
-body.dark-mode select {
-  background: #1a2233 !important;
-  background-color: #1a2233 !important;
-  color: #f1f5f9 !important;
-  border: 1px solid rgba(255,255,255,0.12) !important;
-  -webkit-text-fill-color: #f1f5f9 !important;
-  caret-color: #f1f5f9 !important;
-}
-body.dark-mode input::placeholder,
-body.dark-mode textarea::placeholder { color:#94a3b8 !important; opacity:1 !important; -webkit-text-fill-color:#94a3b8 !important; }
-body.dark-mode input:focus, body.dark-mode textarea:focus, body.dark-mode select:focus {
-  background:#222c40 !important; background-color:#222c40 !important;
-  border-color:#6366f1 !important; box-shadow:0 0 0 3px rgba(99,102,241,0.25) !important; outline:none !important;
-}
-body.dark-mode select option, body.dark-mode select optgroup { background:#1a2233 !important; color:#f1f5f9 !important; }
-body.dark-mode input[type="date"], body.dark-mode input[type="time"], body.dark-mode input[type="datetime-local"],
-body.dark-mode input[type="month"], body.dark-mode input[type="week"] { color-scheme: dark !important; }
-body.dark-mode input:-webkit-autofill, body.dark-mode textarea:-webkit-autofill, body.dark-mode select:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 1000px #1a2233 inset !important; -webkit-text-fill-color:#f1f5f9 !important; caret-color:#f1f5f9 !important;
-}
-body.dark-mode label, body.dark-mode .form-group label, body.dark-mode .lf-group label { color:#e2e8f0 !important; }
-body.dark-mode .card, body.dark-mode .modal, body.dark-mode .confirm-box, body.dark-mode .stat-card,
-body.dark-mode .evento-card, body.dark-mode .patrim-card, body.dark-mode .celula-card, body.dark-mode .comuni-card,
-body.dark-mode .escala-item, body.dark-mode .agenda-item, body.dark-mode .quick-btn, body.dark-mode .tab {
-  background:#161b2a !important; background-color:#161b2a !important; color:#f1f5f9 !important; border-color:rgba(255,255,255,0.08) !important;
-}
-body.dark-mode .perfil-field span { background:#1a2233 !important; color:#f1f5f9 !important; }
-</style>
-
 </head>
 <body>
 <div id="splash-overlay" style="position:fixed; inset:0; z-index:10000; background:#000; display:flex; justify-content:center; align-items:center;">
@@ -2022,8 +1989,8 @@ window.addEventListener('load', () => {
                 document.documentElement.style.overflow = 'auto';
                 document.body.style.backgroundColor = '';
                 carregarConfigSync();
-                // Tenta receber dados da nuvem silenciosamente
-                try { syncReceberDaNuvem(true); } catch(e) { /* silencioso */ }
+                // Tenta receber dados da nuvem silenciosamente antes de qualquer login
+                try { aguardarSyncAntesLogin(); } catch(e) { /* silencioso */ }
                 // Garante que a tela de login esteja visível se não estiver
                 const loginScreen = document.getElementById('login-screen');
                 if (loginScreen) loginScreen.style.display = 'flex';
@@ -3591,8 +3558,101 @@ let LS_KEY_CONF  = LS_KEY_CONF_BASE + 'global';
 // ═══════════════════════════════════════════
 let GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbw1xJF-p0yqmmYRAhUM0w2pJITn2VGm2PEsGR96opiwdqmyO_AtvViuCg0GmDXQPnmmeA/exec';
 let IS_SYNCING = false;
+let ULTIMA_SYNC_PULL_OK = false;
+let syncInicialPromise = null;
 
+function normalizarUsuariosSincronizados(lista){
+  if(!Array.isArray(lista) || lista.length === 0) return;
 
+  const senhasLocais = {};
+  USERS_DB.forEach(u => {
+    const chave = u.role === 'adm' ? String(u.cpf || '').toLowerCase() : cpfSoNumeros(u.cpf || '');
+    if(chave) senhasLocais[chave] = { senha: u.senha, primeiroAcesso: u.primeiroAcesso };
+  });
+
+  USERS_DB.length = 0;
+  let idCounter = 1;
+
+  lista.forEach(orig => {
+    if(!orig) return;
+    const u = {...orig};
+    const role = u.role || 'membro';
+    const chave = role === 'adm' ? String(u.cpf || '').toLowerCase() : cpfSoNumeros(u.cpf || '');
+    const local = senhasLocais[chave];
+
+    if(local && local.primeiroAcesso === false){
+      u.senha = local.senha;
+      u.primeiroAcesso = false;
+    }
+
+    if(u.cpf === 'admin' && role === 'adm'){
+      u.id = 1;
+    } else {
+      idCounter++;
+      u.id = idCounter;
+    }
+
+    USERS_DB.push(u);
+  });
+
+  nextUserId = Math.max(idCounter + 1, ...USERS_DB.map(u => (u.id || 0) + 1));
+}
+
+function garantirAdminPadrao(){
+  const adm = USERS_DB.find(u => u.cpf === 'admin' && u.role === 'adm');
+  if(!adm){
+    USERS_DB.unshift({id:1, cpf:'admin', nome:'Administrador', senha:'admin@admin', role:'adm', primeiroAcesso:false});
+  } else {
+    adm.id = 1;
+    adm.senha = 'admin@admin';
+    adm.primeiroAcesso = false;
+  }
+}
+
+function removerUsuariosMembrosSemCadastro(){
+  const cpfsMembros = (DB.membros || []).map(m => cpfSoNumeros(m.cpf || ''));
+  for(let i = USERS_DB.length - 1; i >= 0; i--){
+    const u = USERS_DB[i];
+    if(u.role === 'membro' && !cpfsMembros.includes(cpfSoNumeros(u.cpf || ''))){
+      USERS_DB.splice(i, 1);
+    }
+  }
+}
+
+async function aguardarSyncAntesLogin(){
+  carregarConfigSync();
+  if(!GAS_WEBAPP_URL || !navigator.onLine) return false;
+
+  if(!syncInicialPromise){
+    syncInicialPromise = syncReceberDaNuvem(true)
+      .catch(err => {
+        console.warn('Sync inicial antes do login falhou:', err && (err.message || err));
+        return false;
+      })
+      .finally(() => { syncInicialPromise = null; });
+  }
+
+  return await syncInicialPromise;
+}
+
+async function executarLoginComSync(botao, erroEl, callback){
+  if(botao){ botao.disabled = true; botao.dataset._txt = botao.textContent; botao.textContent = 'Sincronizando...'; }
+  if(erroEl){ erroEl.style.display = 'none'; }
+
+  try {
+    await aguardarSyncAntesLogin();
+  } finally {
+    if(botao){ botao.disabled = false; botao.textContent = botao.dataset._txt || 'Entrar →'; }
+  }
+
+  callback();
+}
+
+function forcarEnvioImediatoNuvem(){
+  if(typeof syncEnviarParaNuvem !== 'function' || !GAS_WEBAPP_URL) return;
+  clearTimeout(window._syncTimer);
+  syncEnviarParaNuvem().catch(e => console.warn('Envio imediato para nuvem falhou:', e && (e.message || e)));
+}
 
 // Salva a URL do Script no localStorage
 function salvarConfigSync(){
@@ -3655,73 +3715,40 @@ async function syncEnviarParaNuvem(){
 
 // Membros (e ADM) recebem dados da nuvem
 async function syncReceberDaNuvem(silencioso = false){
-  if(!GAS_WEBAPP_URL) return;
-  if(IS_SYNCING) return;
+  if(!GAS_WEBAPP_URL) return false;
+  if(IS_SYNCING) return false;
 
   IS_SYNCING = true;
   if(!silencioso) toast('📥 Sincronizando dados...');
 
   try {
-    const response = await fetch(GAS_WEBAPP_URL + '?action=pull');
+    const response = await fetch(GAS_WEBAPP_URL + '?action=pull&ts=' + Date.now(), { cache: 'no-store' });
     const data = await response.json();
-    
+
     if(data && data.db){
-      // Atualiza banco local
       Object.assign(DB, data.db);
-      
-      // Atualiza usuários preservando senhas e primeiroAcesso locais
-      if(data.users && data.users.length > 0){
-        // Guarda senhas e primeiroAcesso que o membro já trocou localmente
-        const senhasLocais = {};
-        USERS_DB.forEach(u => {
-          senhasLocais[cpfSoNumeros(u.cpf||'')] = { senha: u.senha, primeiroAcesso: u.primeiroAcesso };
-        });
-        USERS_DB.length = 0;
-        let idCounter = 2; // começa em 2 pois admin é id 1
-        data.users.forEach(u => {
-          const cpf = cpfSoNumeros(u.cpf||'');
-          const local = senhasLocais[cpf];
-          if(local && local.primeiroAcesso === false){
-            u.senha = local.senha;
-            u.primeiroAcesso = false;
-          }
-          // Reatribui IDs únicos para corrigir dados corrompidos
-          if(u.role !== 'adm'){
-            idCounter++;
-            u.id = idCounter;
-          }
-          USERS_DB.push(u);
-        });
-        nextUserId = idCounter + 1;
-      }
-      // Remove usuários membro que não existem mais em DB.membros
-      const cpfsMembros = (DB.membros || []).map(m => cpfSoNumeros(m.cpf || ''));
-      for(let i = USERS_DB.length - 1; i >= 0; i--){
-        const u = USERS_DB[i];
-        if(u.role === 'membro' && !cpfsMembros.includes(cpfSoNumeros(u.cpf || ''))){
-          USERS_DB.splice(i, 1);
-        }
-      }
-      // Garante que o admin padrão sempre exista com senha correta após sync
-      const admSync = USERS_DB.find(u => u.cpf === 'admin' && u.role === 'adm');
-      if(!admSync){
-        USERS_DB.unshift({id:1, cpf:'admin', nome:'Administrador', senha:'admin@admin', role:'adm', primeiroAcesso:false});
-      } else {
-        admSync.senha = 'admin@admin';
-        admSync.primeiroAcesso = false;
-      }
-      
+      normalizarUsuariosSincronizados(data.users || []);
+      removerUsuariosMembrosSemCadastro();
+      garantirAdminPadrao();
+
       if(data.conf && data.conf.churchName) churchName = data.conf.churchName;
-      
+
+      ULTIMA_SYNC_PULL_OK = true;
       salvarLS();
+      localStorage.setItem('ultima_sync', new Date().toISOString());
+      atualizarLabelSync();
       if(!silencioso) {
         toast('✅ Aplicativo atualizado!');
-        renderAll(); // Re-renderiza a página atual
+        renderAll();
       }
+      return true;
     }
+
+    return false;
   } catch (e) {
     console.error(e);
     if(!silencioso) toast('❌ Erro na sincronização.');
+    return false;
   } finally {
     IS_SYNCING = false;
   }
@@ -3773,27 +3800,11 @@ function carregarLS(){
       churchName = cn;
     }}
   }catch(e){console.warn('Erro ao carregar localStorage',e);}
-  // Remove usuários membro que não existem mais em DB.membros
-  const cpfsMembros = (DB.membros || []).map(m => cpfSoNumeros(m.cpf || ''));
-  for(let i = USERS_DB.length - 1; i >= 0; i--){
-    const u = USERS_DB[i];
-    if(u.role === 'membro' && !cpfsMembros.includes(cpfSoNumeros(u.cpf || ''))){
-      USERS_DB.splice(i, 1);
-    }
-  }
-  // Recalcula nextUserId para evitar IDs duplicados após recarregar do localStorage
+  removerUsuariosMembrosSemCadastro();
   if(USERS_DB.length > 0){
     nextUserId = Math.max(...USERS_DB.map(u => u.id || 0)) + 1;
   }
-  // Garante que o admin padrão sempre exista com cpf='admin' e senha correta
-  const admPadrao = USERS_DB.find(u => u.cpf === 'admin' && u.role === 'adm');
-  if(!admPadrao){
-    USERS_DB.unshift({id:1, cpf:'admin', nome:'Administrador', senha:'admin@admin', role:'adm', primeiroAcesso:false});
-  } else {
-    // Força senha e primeiroAcesso corretos no admin padrão (ignora o que estava salvo no localStorage)
-    admPadrao.senha = 'admin@admin';
-    admPadrao.primeiroAcesso = false;
-  }
+  garantirAdminPadrao();
 }
 
 // ═══════════════════════════════════════════
@@ -3836,7 +3847,15 @@ function switchLoginTab(tipo){
   }
 }
 
-function doLoginAdm(){
+async function doLoginAdm(){
+  const btn = document.querySelector('#login-form-adm .btn-login');
+  if(!doLoginAdm._aposSync){
+    doLoginAdm._aposSync = true;
+    await executarLoginComSync(btn, document.getElementById('login-error-adm'), () => doLoginAdm());
+    doLoginAdm._aposSync = false;
+    return;
+  }
+
   const u = document.getElementById('login-user-adm').value.trim().toLowerCase();
   const p = document.getElementById('login-pass-adm').value;
   const err = document.getElementById('login-error-adm');
@@ -3995,7 +4014,15 @@ function confirmarCriarAdmInicial(){
   toast('✅ Administrador criado! Faça login com suas novas credenciais.');
 }
 
-function doLoginMembro(){
+async function doLoginMembro(){
+  const btn = document.querySelector('#login-form-membro .btn-login');
+  if(!doLoginMembro._aposSync){
+    doLoginMembro._aposSync = true;
+    await executarLoginComSync(btn, document.getElementById('login-error-memb'), () => doLoginMembro());
+    doLoginMembro._aposSync = false;
+    return;
+  }
+
   const cpfRaw = document.getElementById('login-user-memb').value.trim();
   const p = document.getElementById('login-pass-memb').value;
   const err = document.getElementById('login-error-memb');
@@ -4447,6 +4474,7 @@ function salvarUsuario(){
     toast('✅ Usuário criado! Ele trocará a senha no primeiro acesso.');
   }
   salvarLS();
+  forcarEnvioImediatoNuvem();
   fecharModal();
   renderUsuarios();
 }
@@ -4901,6 +4929,7 @@ function salvarMembro(){
 
   toast(toastMsg);
   salvarLS(); // sync automático via debounce em salvarLS
+  forcarEnvioImediatoNuvem();
   limparFormMembro();
   renderSecretaria();
   renderDashboard();
@@ -6121,8 +6150,8 @@ window.addEventListener('load', () => {
                 document.documentElement.style.overflow = 'auto';
                 document.body.style.backgroundColor = '';
                 carregarConfigSync();
-                // Tenta receber dados da nuvem silenciosamente
-                try { syncReceberDaNuvem(true); } catch(e) { /* silencioso */ }
+                // Tenta receber dados da nuvem silenciosamente antes de qualquer login
+                try { aguardarSyncAntesLogin(); } catch(e) { /* silencioso */ }
 
                 // Sempre mostra tela de login ao abrir
                 const loginScreen = document.getElementById('login-screen');
