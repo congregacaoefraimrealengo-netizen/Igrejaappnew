@@ -3564,12 +3564,9 @@ let syncInicialPromise = null;
 function normalizarUsuariosSincronizados(lista){
   if(!Array.isArray(lista) || lista.length === 0) return;
 
-  const senhasLocais = {};
-  USERS_DB.forEach(u => {
-    const chave = u.role === 'adm' ? String(u.cpf || '').toLowerCase() : cpfSoNumeros(u.cpf || '');
-    if(chave) senhasLocais[chave] = { senha: u.senha, primeiroAcesso: u.primeiroAcesso };
-  });
-
+  // 🔧 A nuvem é a fonte da verdade. NÃO preservamos senha local —
+  // se o usuário trocou a senha em outro aparelho, a versão nova vem da nuvem
+  // e tem que prevalecer aqui também.
   USERS_DB.length = 0;
   let idCounter = 1;
 
@@ -3577,13 +3574,6 @@ function normalizarUsuariosSincronizados(lista){
     if(!orig) return;
     const u = {...orig};
     const role = u.role || 'membro';
-    const chave = role === 'adm' ? String(u.cpf || '').toLowerCase() : cpfSoNumeros(u.cpf || '');
-    const local = senhasLocais[chave];
-
-    if(local && local.primeiroAcesso === false){
-      u.senha = local.senha;
-      u.primeiroAcesso = false;
-    }
 
     if(u.cpf === 'admin' && role === 'adm'){
       u.id = 1;
@@ -3940,16 +3930,8 @@ function abrirModalCriarAdmInicial(){
             <label style="font-size:12px;font-weight:600;color:#ffd56a;text-transform:uppercase;letter-spacing:.6px;display:block;margin-bottom:6px;">Confirmar Senha*</label>
             <input id="novo-adm-senha2" type="password" placeholder="Repita a senha" style="width:100%;border:1px solid #293241;border-radius:10px;padding:13px 16px;font-size:15px;font-family:'DM Sans',sans-serif;outline:none;background:#141a22;color:#edf2f7;">
           </div>
-          <div>
-            <label style="font-size:12px;font-weight:600;color:#ffd56a;text-transform:uppercase;letter-spacing:.6px;display:block;margin-bottom:6px;">Pergunta Secreta* (para recuperar senha)</label>
-            <select id="novo-adm-pergunta" style="width:100%;border:1px solid #293241;border-radius:10px;padding:13px 16px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;background:#141a22;color:#edf2f7;">
-              <option value="">— selecione —</option>
-              ${PERGUNTAS_SECRETAS.map(q=>`<option value="${q}">${q}</option>`).join('')}
-            </select>
-          </div>
-          <div>
-            <label style="font-size:12px;font-weight:600;color:#ffd56a;text-transform:uppercase;letter-spacing:.6px;display:block;margin-bottom:6px;">Resposta Secreta*</label>
-            <input id="novo-adm-resposta" type="text" placeholder="Sua resposta" autocomplete="off" style="width:100%;border:1px solid #293241;border-radius:10px;padding:13px 16px;font-size:15px;font-family:'DM Sans',sans-serif;outline:none;background:#141a22;color:#edf2f7;">
+          <div style="background:#1a2233;border:1px solid #293241;border-radius:8px;padding:10px 12px;font-size:12px;color:#aab4c3;">
+            💡 A <strong>pergunta secreta</strong> será solicitada apenas quando você for trocar de senha.
           </div>
           <div id="novo-adm-erro" style="display:none;background:#ffebee;color:#b71c1c;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:600;text-align:center;"></div>
           <button onclick="confirmarCriarAdmInicial()" style="margin-top:4px;background:linear-gradient(135deg,#4f8cff,#6ca0ff);color:white;border:none;padding:15px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,0.3);">✅ Criar Administrador</button>
@@ -3963,8 +3945,6 @@ function abrirModalCriarAdmInicial(){
   document.getElementById('novo-adm-login').value = '';
   document.getElementById('novo-adm-senha').value = '';
   document.getElementById('novo-adm-senha2').value = '';
-  const pSel = document.getElementById('novo-adm-pergunta'); if(pSel) pSel.value = '';
-  const rIn  = document.getElementById('novo-adm-resposta'); if(rIn) rIn.value = '';
   document.getElementById('novo-adm-erro').style.display = 'none';
   overlay.style.display = 'flex';
 }
@@ -3976,30 +3956,27 @@ function cancelarCriarAdmInicial(){
   document.getElementById('login-error-adm').style.display = 'none';
 }
 
-function confirmarCriarAdmInicial(){
+async function confirmarCriarAdmInicial(){
   const nome   = document.getElementById('novo-adm-nome').value.trim();
   const login  = document.getElementById('novo-adm-login').value.trim().toLowerCase();
   const senha  = document.getElementById('novo-adm-senha').value;
   const senha2 = document.getElementById('novo-adm-senha2').value;
-  const pergunta = document.getElementById('novo-adm-pergunta').value;
-  const resposta = document.getElementById('novo-adm-resposta').value;
   const erro   = document.getElementById('novo-adm-erro');
 
   if(!nome){ erro.style.display='block'; erro.textContent='⚠️ Nome é obrigatório!'; return; }
   if(!login){ erro.style.display='block'; erro.textContent='⚠️ Usuário de login é obrigatório!'; return; }
   if(senha.length < 6){ erro.style.display='block'; erro.textContent='⚠️ A senha deve ter ao menos 6 caracteres!'; return; }
   if(senha !== senha2){ erro.style.display='block'; erro.textContent='⚠️ As senhas não coincidem!'; return; }
-  if(!pergunta){ erro.style.display='block'; erro.textContent='⚠️ Selecione uma pergunta secreta!'; return; }
-  if(!resposta || resposta.trim().length < 2){ erro.style.display='block'; erro.textContent='⚠️ Informe a resposta secreta!'; return; }
   if(USERS_DB.find(u => u.cpf.toLowerCase() === login)){ erro.style.display='block'; erro.textContent='⚠️ Este usuário já existe!'; return; }
 
-  // Cria o novo ADM
-  USERS_DB.push({id: nextUserId++, cpf: login, nome, senha, role: 'adm', primeiroAcesso: true, pergunta, resposta:_normResp(resposta)});
+  // Cria o novo ADM. A senha já foi definida agora, então primeiroAcesso=false.
+  // A pergunta secreta só será solicitada se/quando ele for trocar de senha depois.
+  USERS_DB.push({id: nextUserId++, cpf: login, nome, senha, role: 'adm', primeiroAcesso: false});
   salvarLS();
   // 🔧 FIX: força envio imediato para a nuvem (currentUser ainda é null aqui,
   // então salvarLS sozinho NÃO dispara o sync — sem isso o ADM nunca chega no Sheets)
   if (typeof syncEnviarParaNuvem === 'function' && typeof GAS_WEBAPP_URL !== 'undefined' && GAS_WEBAPP_URL) {
-    try { syncEnviarParaNuvem(); } catch(e) { console.warn('Push do novo ADM falhou:', e); }
+    try { await syncEnviarParaNuvem(); } catch(e) { console.warn('Push do novo ADM falhou:', e); }
   }
 
   // Fecha o overlay
@@ -4165,7 +4142,7 @@ function doLogin(){
   if(tab === 'adm') doLoginAdm(); else doLoginMembro();
 }
 
-function confirmarTrocaSenha(){
+async function confirmarTrocaSenha(){
   const p1 = document.getElementById('new-pass1').value;
   const p2 = document.getElementById('new-pass2').value;
   const errEl = document.getElementById('change-pass-error');
@@ -4173,7 +4150,6 @@ function confirmarTrocaSenha(){
   if(p1 !== p2){ errEl.textContent='As senhas não coincidem.'; errEl.style.display='block'; return; }
   errEl.style.display='none';
   const screen = document.getElementById('change-pass-screen');
-  // Usa CPF como chave primária para evitar conflito com IDs duplicados
   const user = screen._userCpf
     ? USERS_DB.find(u => cpfSoNumeros(u.cpf) === cpfSoNumeros(screen._userCpf))
     : USERS_DB.find(u => u.id === screen._userId);
@@ -4190,17 +4166,24 @@ function confirmarTrocaSenha(){
   user.senha = p1;
   user.primeiroAcesso = false;
   salvarLS();
-  // 🔧 Força push imediato da nova senha para a nuvem (currentUser ainda é null,
-  // então salvarLS sozinho não dispara o sync e a senha ficaria só neste navegador)
-  if (typeof syncEnviarParaNuvem === 'function' && typeof GAS_WEBAPP_URL !== 'undefined' && GAS_WEBAPP_URL) {
-    try { syncEnviarParaNuvem(); } catch(e) { console.warn('Push da troca de senha falhou:', e); }
+
+  // 🔧 AGUARDA o push terminar antes de seguir — sem isso a navegação aborta o fetch
+  // e a senha nova fica só neste aparelho.
+  const btn = document.querySelector('#change-pass-screen .btn-login');
+  const txtOriginal = btn ? btn.textContent : '';
+  if(btn){ btn.disabled = true; btn.textContent = 'Salvando...'; }
+  if(typeof GAS_WEBAPP_URL !== 'undefined' && GAS_WEBAPP_URL && typeof syncEnviarParaNuvem === 'function'){
+    try { await syncEnviarParaNuvem(); }
+    catch(e) { console.warn('Push da troca de senha falhou:', e); }
   }
+  if(btn){ btn.disabled = false; btn.textContent = txtOriginal; }
+
   screen.style.display='none';
   document.getElementById('new-pass1').value='';
   document.getElementById('new-pass2').value='';
   const np = document.getElementById('new-pergunta'); if(np) np.value='';
   const nr = document.getElementById('new-resposta'); if(nr) nr.value='';
-  toast('✅ Senha definida com sucesso!');
+  toast('✅ Senha definida e sincronizada!');
   loginSuccess(user);
 }
 
