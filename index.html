@@ -34,6 +34,9 @@
 body { font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
 h1, h2, h3, .sb-church { font-family: 'Outfit', sans-serif !important; }
 
+/* Master-only: garante que admins comuns NUNCA vejam cards/botões restritos */
+body.not-master .master-only { display: none !important; }
+
 /* Modern Sidebar */
 #sidebar { background: #0f172a !important; border-right: 1px solid rgba(255,255,255,0.05); }
 .nav-item { border-radius: 8px; margin: 4px 12px; transition: 0.2s; border-left: none !important; }
@@ -4274,33 +4277,43 @@ function aplicarMasterOnly(){
   document.querySelectorAll('.master-only').forEach(el=>{
     el.style.display = isMaster ? '' : 'none';
   });
+  // Reforço defensivo: marca o body para que regras CSS também escondam .master-only
+  if(document.body){
+    document.body.classList.toggle('is-master', !!isMaster);
+    document.body.classList.toggle('not-master', !isMaster);
+  }
 }
 
 function abrirModalUsuario(id){
   const user = id ? USERS_DB.find(u=>u.id===id) : null;
-  document.getElementById('modal-title').textContent = user ? 'Editar Usuário' : 'Novo Usuário';
+  const isMaster = currentUser && currentUser.cpf === 'admin';
+  const isSelfEdit = user && currentUser && user.id === currentUser.id && !isMaster;
+  document.getElementById('modal-title').textContent = isSelfEdit
+    ? '🔑 Alterar Minha Senha'
+    : (user ? 'Editar Usuário' : 'Novo Usuário');
   document.getElementById('modal-body').innerHTML = `
     <input type="hidden" id="mu-id" value="${user?user.id:''}">
+    ${isSelfEdit ? `<div class="alert alert-azul" style="margin-bottom:14px">ℹ️ Você pode alterar sua <strong>senha</strong> e sua <strong>pergunta secreta</strong>. Demais dados só podem ser alterados pelo administrador master.</div>` : ''}
     <div class="form-grid">
       <div class="form-group full"><label>Nome Completo*</label>
-        <input type="text" id="mu-nome" list="membros-list" value="${user?user.nome:''}" placeholder="Nome do usuário" onchange="autoPreencherCPF(this.value)">
+        <input type="text" id="mu-nome" list="membros-list" value="${user?user.nome:''}" placeholder="Nome do usuário" onchange="autoPreencherCPF(this.value)" ${isSelfEdit?'readonly':''}>
         <datalist id="membros-list">
           ${DB.membros.map(m => `<option value="${m.nome}">`).join('')}
         </datalist>
       </div>
       <div class="form-group"><label>Perfil</label>
-        <select id="mu-role" onchange="toggleCampoLogin(this.value)">
+        <select id="mu-role" onchange="toggleCampoLogin(this.value)" ${isSelfEdit?'disabled':''}>
           <option value="membro" ${user&&user.role==='membro'?'selected':''}>Membro</option>
           <option value="adm" ${user&&user.role==='adm'?'selected':''}>Administrador</option>
         </select>
       </div>
       <div class="form-group" id="campo-cpf-grupo" style="${user&&user.role==='adm'?'display:none':''}">
         <label>CPF (login)*</label>
-        <input type="text" id="mu-cpf" value="${user&&user.cpf!=='admin'?user.cpf:''}" placeholder="000.000.000-00" oninput="maskCPF(this)" maxlength="14">
+        <input type="text" id="mu-cpf" value="${user&&user.cpf!=='admin'?user.cpf:''}" placeholder="000.000.000-00" oninput="maskCPF(this)" maxlength="14" ${isSelfEdit?'readonly':''}>
       </div>
       <div class="form-group" id="campo-adm-info" style="${!user||user.role!=='adm'?'display:none':''}">
         <label>Login (Usuário)*</label>
-        <input type="text" id="mu-login-adm" value="${user&&user.role==='adm'?user.cpf:''}" placeholder="Ex: pastor_joao">
+        <input type="text" id="mu-login-adm" value="${user&&user.role==='adm'?user.cpf:''}" placeholder="Ex: pastor_joao" ${isSelfEdit?'readonly':''}>
       </div>
       ${!user?`
       <div class="form-group"><label>Senha Inicial*</label>
@@ -4310,8 +4323,8 @@ function abrirModalUsuario(id){
         <div class="alert alert-ouro" style="margin:0">⚠️ O usuário deverá trocar a senha no primeiro acesso.</div>
       </div>`:`
       <div class="form-group full">
-        <label>Nova Senha (deixe em branco para manter)</label>
-        <input type="password" id="mu-senha" placeholder="Nova senha (opcional)">
+        <label>${isSelfEdit?'Nova Senha':'Nova Senha (deixe em branco para manter)'}</label>
+        <input type="password" id="mu-senha" placeholder="${isSelfEdit?'Digite sua nova senha (mín. 6 caracteres)':'Nova senha (opcional)'}" autofocus>
       </div>`}
       <div class="form-group full">
         <label>Pergunta Secreta${!user?'*':' (opcional — para recuperação de senha)'}</label>
