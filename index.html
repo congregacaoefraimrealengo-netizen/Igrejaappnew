@@ -2038,7 +2038,7 @@ window.addEventListener('load', () => {
       <button class="btn-login" onclick="doLoginAdm()">Entrar →</button>
       
       <div style="margin-top:10px;text-align:center;">
-        <span onclick="mostrarDicaMaster()" style="font-size:12px;color:#aab4c3;cursor:pointer;text-decoration:underline;opacity:.8;">Esqueceu a senha?</span>
+        <span onclick="abrirRecuperarSenha('adm')" style="font-size:12px;color:#aab4c3;cursor:pointer;text-decoration:underline;opacity:.8;">Esqueceu a senha?</span>
       </div>
       <div id="dica-master" style="display:none;margin-top:10px;background:rgba(240,192,64,.1);border:1px solid rgba(240,192,64,.25);border-radius:8px;padding:10px 14px;font-size:12px;color:#ffd56a;text-align:center;line-height:1.6;">
         🔑 Use a <strong>senha master</strong> para recuperar o acesso.<br>Após entrar, defina uma nova senha.
@@ -2057,7 +2057,9 @@ window.addEventListener('load', () => {
       </div>
       <div class="login-error" id="login-error-memb">CPF ou senha incorretos.</div>
       <button class="btn-login" onclick="doLoginMembro()">Entrar →</button>
-      
+      <div style="margin-top:10px;text-align:center;">
+        <span onclick="abrirRecuperarSenha('membro')" style="font-size:12px;color:#aab4c3;cursor:pointer;text-decoration:underline;opacity:.8;">Esqueceu a senha?</span>
+      </div>
     </div>
   </div>
   <!-- Assinatura do desenvolvedor -->
@@ -2080,8 +2082,66 @@ window.addEventListener('load', () => {
     <div style="display:flex;flex-direction:column;gap:14px;">
       <div class="lf-group"><label>Nova Senha*</label><input type="password" id="new-pass1" placeholder="Mínimo 6 caracteres"></div>
       <div class="lf-group"><label>Confirmar Senha*</label><input type="password" id="new-pass2" placeholder="Repita a nova senha"></div>
+      <div id="new-pergunta-wrap" class="lf-group">
+        <label>Pergunta Secreta* (para recuperar senha)</label>
+        <select id="new-pergunta" style="width:100%;border:1px solid #293241;border-radius:10px;padding:13px 16px;font-size:14px;background:#141a22;color:#edf2f7;">
+          <option value="">— selecione —</option>
+        </select>
+      </div>
+      <div id="new-resposta-wrap" class="lf-group">
+        <label>Resposta Secreta*</label>
+        <input type="text" id="new-resposta" placeholder="Sua resposta" autocomplete="off">
+      </div>
       <div id="change-pass-error" style="display:none;background:#3a1a1a;color:#ef9a9a;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:600;text-align:center;"></div>
       <button class="btn-login" onclick="confirmarTrocaSenha()" style="margin-top:4px;">✅ Confirmar Nova Senha</button>
+    </div>
+  </div>
+</div>
+
+<!-- TELA RECUPERAR SENHA (pergunta secreta) -->
+<div id="recover-screen" style="display:none;position:fixed;inset:0;z-index:10001;background:linear-gradient(160deg,#0b1220,#162033);align-items:center;justify-content:center;flex-direction:column;">
+  <div style="background:rgba(20,26,34,.97);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:36px 32px;width:100%;max-width:430px;box-shadow:0 20px 60px rgba(0,0,0,.5);">
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="font-size:38px;margin-bottom:10px;">🔓</div>
+      <div style="font-family:'Playfair Display',serif;font-size:21px;font-weight:700;color:#ffd56a;margin-bottom:6px;">Recuperar Senha</div>
+      <div id="recover-subtitle" style="font-size:13px;color:#9ca8b7;">Informe seus dados para recuperar o acesso.</div>
+    </div>
+
+    <!-- Etapa 1: identificar usuário -->
+    <div id="recover-step-1" style="display:flex;flex-direction:column;gap:12px;">
+      <div class="lf-group">
+        <label id="recover-label-login">Usuário / CPF</label>
+        <input type="text" id="recover-login" placeholder="Seu login ou CPF" autocomplete="off">
+      </div>
+      <div id="recover-error-1" style="display:none;background:#3a1a1a;color:#ef9a9a;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:600;text-align:center;"></div>
+      <button class="btn-login" onclick="recuperarBuscarUsuario()">Continuar →</button>
+      <button onclick="fecharRecuperarSenha()" style="background:transparent;color:#9ca8b7;border:1px solid #293241;padding:11px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;">Cancelar</button>
+    </div>
+
+    <!-- Etapa 2: pergunta secreta -->
+    <div id="recover-step-2" style="display:none;flex-direction:column;gap:12px;">
+      <div style="background:rgba(79,140,255,.08);border:1px solid rgba(79,140,255,.25);border-radius:10px;padding:12px 14px;">
+        <div style="font-size:11px;color:#aab4c3;text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px;">Pergunta Secreta</div>
+        <div id="recover-pergunta" style="font-size:14px;color:#edf2f7;font-weight:600;line-height:1.45;"></div>
+      </div>
+      <div class="lf-group">
+        <label>Sua Resposta</label>
+        <input type="text" id="recover-resposta" placeholder="Digite a resposta" autocomplete="off">
+      </div>
+      <div id="recover-error-2" style="display:none;background:#3a1a1a;color:#ef9a9a;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:600;text-align:center;"></div>
+      <button class="btn-login" onclick="recuperarConfirmarResposta()">Verificar →</button>
+      <button onclick="fecharRecuperarSenha()" style="background:transparent;color:#9ca8b7;border:1px solid #293241;padding:11px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;">Cancelar</button>
+    </div>
+
+    <!-- Etapa 3: nova senha -->
+    <div id="recover-step-3" style="display:none;flex-direction:column;gap:12px;">
+      <div style="background:rgba(76,175,80,.1);border:1px solid rgba(76,175,80,.3);border-radius:10px;padding:10px 14px;color:#a5d6a7;font-size:13px;text-align:center;">
+        ✅ Resposta correta! Defina sua nova senha.
+      </div>
+      <div class="lf-group"><label>Nova Senha (mín. 6 caracteres)</label><input type="password" id="recover-pass1" placeholder="Nova senha"></div>
+      <div class="lf-group"><label>Confirmar Senha</label><input type="password" id="recover-pass2" placeholder="Repita a senha"></div>
+      <div id="recover-error-3" style="display:none;background:#3a1a1a;color:#ef9a9a;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:600;text-align:center;"></div>
+      <button class="btn-login" onclick="recuperarSalvarNovaSenha()">✅ Salvar Nova Senha</button>
     </div>
   </div>
 </div>
@@ -3060,15 +3120,15 @@ window.addEventListener('load', () => {
   <div class="page-header"><h1>🔑 Usuários & Permissões</h1><p>Gerencie quem acessa o sistema</p></div>
   <div class="btn-row" style="margin-bottom:16px;margin-top:0;">
     <button class="btn btn-primary" onclick="abrirModalUsuario()">+ Novo Usuário</button>
-    <button class="btn btn-ouro" onclick="exportarBackup()">📥 Backup JSON</button>
-    <button class="btn btn-secondary" onclick="document.getElementById('input-restore').click()">📤 Restaurar</button>
+    <button class="btn btn-ouro master-only" onclick="exportarBackup()">📥 Backup JSON</button>
+    <button class="btn btn-secondary master-only" onclick="document.getElementById('input-restore').click()">📤 Restaurar</button>
     <input type="file" id="input-restore" accept=".json" style="display:none" onchange="importarBackup(event)">
   </div>
   <div class="card">
     <h3>Usuários Cadastrados</h3>
     <div id="lista-usuarios"></div>
   </div>
-  <div class="card" style="margin-top:16px">
+  <div class="card master-only" style="margin-top:16px">
     <h3>Backup & Restauração</h3>
     <div class="alert alert-azul" style="margin-bottom:12px">💾 O backup salva <strong>todos os dados</strong> (membros, financeiro, eventos, patrimônio, comunicados e usuários) em um arquivo JSON.</div>
     <div class="btn-row">
@@ -3330,6 +3390,23 @@ const VERSICULOS = [
 let currentUser = null;
 let churchName = 'Assembleia de Deus Congregação Efraim';
 let confirmCallback = null;
+
+// ═══════════════════════════════════════════
+//  PERGUNTAS SECRETAS (recuperação de senha)
+// ═══════════════════════════════════════════
+const PERGUNTAS_SECRETAS = [
+  'Qual o nome do seu primeiro animal de estimação?',
+  'Qual o nome da sua mãe?',
+  'Qual o nome do seu pai?',
+  'Em qual cidade você nasceu?',
+  'Qual o nome da escola onde estudou na infância?',
+  'Qual o seu time de futebol favorito?',
+  'Qual o nome do seu melhor amigo de infância?',
+  'Qual a sua comida favorita?',
+  'Qual o versículo bíblico que você mais gosta?',
+  'Qual o nome do pastor que te batizou?'
+];
+function _normResp(s){ return String(s||'').trim().toLowerCase().replace(/\s+/g,' '); }
 
 // ═══════════════════════════════════════════
 //  LOCALSTORAGE — PERSISTÊNCIA
@@ -3629,6 +3706,9 @@ function doLoginAdm(){
       cpScreen.style.display='flex';
       cpScreen._userId = user.id;
       cpScreen._userCpf = user.cpf;
+      const _hasQ = !!(user.pergunta && user.resposta);
+      const _pw = document.getElementById('new-pergunta-wrap'); if(_pw) _pw.style.display = _hasQ ? 'none' : '';
+      const _rw = document.getElementById('new-resposta-wrap'); if(_rw) _rw.style.display = _hasQ ? 'none' : '';
     } else {
       loginSuccess(user);
     }
@@ -3670,6 +3750,17 @@ function abrirModalCriarAdmInicial(){
             <label style="font-size:12px;font-weight:600;color:#ffd56a;text-transform:uppercase;letter-spacing:.6px;display:block;margin-bottom:6px;">Confirmar Senha*</label>
             <input id="novo-adm-senha2" type="password" placeholder="Repita a senha" style="width:100%;border:1px solid #293241;border-radius:10px;padding:13px 16px;font-size:15px;font-family:'DM Sans',sans-serif;outline:none;background:#141a22;color:#edf2f7;">
           </div>
+          <div>
+            <label style="font-size:12px;font-weight:600;color:#ffd56a;text-transform:uppercase;letter-spacing:.6px;display:block;margin-bottom:6px;">Pergunta Secreta* (para recuperar senha)</label>
+            <select id="novo-adm-pergunta" style="width:100%;border:1px solid #293241;border-radius:10px;padding:13px 16px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;background:#141a22;color:#edf2f7;">
+              <option value="">— selecione —</option>
+              ${PERGUNTAS_SECRETAS.map(q=>`<option value="${q}">${q}</option>`).join('')}
+            </select>
+          </div>
+          <div>
+            <label style="font-size:12px;font-weight:600;color:#ffd56a;text-transform:uppercase;letter-spacing:.6px;display:block;margin-bottom:6px;">Resposta Secreta*</label>
+            <input id="novo-adm-resposta" type="text" placeholder="Sua resposta" autocomplete="off" style="width:100%;border:1px solid #293241;border-radius:10px;padding:13px 16px;font-size:15px;font-family:'DM Sans',sans-serif;outline:none;background:#141a22;color:#edf2f7;">
+          </div>
           <div id="novo-adm-erro" style="display:none;background:#ffebee;color:#b71c1c;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:600;text-align:center;"></div>
           <button onclick="confirmarCriarAdmInicial()" style="margin-top:4px;background:linear-gradient(135deg,#4f8cff,#6ca0ff);color:white;border:none;padding:15px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,0.3);">✅ Criar Administrador</button>
           <button onclick="cancelarCriarAdmInicial()" style="background:transparent;color:#9ca8b7;border:1px solid #293241;padding:13px;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">✖ Cancelar</button>
@@ -3682,6 +3773,8 @@ function abrirModalCriarAdmInicial(){
   document.getElementById('novo-adm-login').value = '';
   document.getElementById('novo-adm-senha').value = '';
   document.getElementById('novo-adm-senha2').value = '';
+  const pSel = document.getElementById('novo-adm-pergunta'); if(pSel) pSel.value = '';
+  const rIn  = document.getElementById('novo-adm-resposta'); if(rIn) rIn.value = '';
   document.getElementById('novo-adm-erro').style.display = 'none';
   overlay.style.display = 'flex';
 }
@@ -3698,16 +3791,20 @@ function confirmarCriarAdmInicial(){
   const login  = document.getElementById('novo-adm-login').value.trim().toLowerCase();
   const senha  = document.getElementById('novo-adm-senha').value;
   const senha2 = document.getElementById('novo-adm-senha2').value;
+  const pergunta = document.getElementById('novo-adm-pergunta').value;
+  const resposta = document.getElementById('novo-adm-resposta').value;
   const erro   = document.getElementById('novo-adm-erro');
 
   if(!nome){ erro.style.display='block'; erro.textContent='⚠️ Nome é obrigatório!'; return; }
   if(!login){ erro.style.display='block'; erro.textContent='⚠️ Usuário de login é obrigatório!'; return; }
   if(senha.length < 6){ erro.style.display='block'; erro.textContent='⚠️ A senha deve ter ao menos 6 caracteres!'; return; }
   if(senha !== senha2){ erro.style.display='block'; erro.textContent='⚠️ As senhas não coincidem!'; return; }
+  if(!pergunta){ erro.style.display='block'; erro.textContent='⚠️ Selecione uma pergunta secreta!'; return; }
+  if(!resposta || resposta.trim().length < 2){ erro.style.display='block'; erro.textContent='⚠️ Informe a resposta secreta!'; return; }
   if(USERS_DB.find(u => u.cpf.toLowerCase() === login)){ erro.style.display='block'; erro.textContent='⚠️ Este usuário já existe!'; return; }
 
   // Cria o novo ADM
-  USERS_DB.push({id: nextUserId++, cpf: login, nome, senha, role: 'adm', primeiroAcesso: true});
+  USERS_DB.push({id: nextUserId++, cpf: login, nome, senha, role: 'adm', primeiroAcesso: true, pergunta, resposta:_normResp(resposta)});
   salvarLS();
   // 🔧 FIX: força envio imediato para a nuvem (currentUser ainda é null aqui,
   // então salvarLS sozinho NÃO dispara o sync — sem isso o ADM nunca chega no Sheets)
@@ -3759,6 +3856,9 @@ function doLoginMembro(){
     cpScreen.style.display='flex';
     cpScreen._userId = userByCpf.id;
     cpScreen._userCpf = userByCpf.cpf;
+    const _hasQ = !!(userByCpf.pergunta && userByCpf.resposta);
+    const _pw = document.getElementById('new-pergunta-wrap'); if(_pw) _pw.style.display = _hasQ ? 'none' : '';
+    const _rw = document.getElementById('new-resposta-wrap'); if(_rw) _rw.style.display = _hasQ ? 'none' : '';
   } else {
     loginSuccess(userByCpf);
   }
@@ -3767,6 +3867,98 @@ function doLoginMembro(){
 function mostrarDicaMaster(){
   const el = document.getElementById('dica-master');
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+// ═══════════════════════════════════════════
+//  RECUPERAÇÃO DE SENHA (Pergunta Secreta)
+// ═══════════════════════════════════════════
+let _recoverUser = null;
+function abrirRecuperarSenha(tipo){
+  _recoverUser = null;
+  const scr = document.getElementById('recover-screen');
+  scr.style.display = 'flex';
+  scr._tipo = tipo;
+  document.getElementById('recover-step-1').style.display='flex';
+  document.getElementById('recover-step-2').style.display='none';
+  document.getElementById('recover-step-3').style.display='none';
+  document.getElementById('recover-error-1').style.display='none';
+  document.getElementById('recover-error-2').style.display='none';
+  document.getElementById('recover-error-3').style.display='none';
+  document.getElementById('recover-login').value='';
+  document.getElementById('recover-resposta').value='';
+  document.getElementById('recover-pass1').value='';
+  document.getElementById('recover-pass2').value='';
+  const lbl = document.getElementById('recover-label-login');
+  const inp = document.getElementById('recover-login');
+  if(tipo === 'membro'){
+    lbl.textContent = 'CPF';
+    inp.placeholder = '000.000.000-00';
+    inp.oninput = function(){ maskCPF(this); };
+  } else {
+    lbl.textContent = 'Usuário (login)';
+    inp.placeholder = 'Seu login de administrador';
+    inp.oninput = null;
+  }
+}
+function fecharRecuperarSenha(){
+  document.getElementById('recover-screen').style.display='none';
+  _recoverUser = null;
+}
+function recuperarBuscarUsuario(){
+  const tipo = document.getElementById('recover-screen')._tipo;
+  const val  = document.getElementById('recover-login').value.trim();
+  const err  = document.getElementById('recover-error-1');
+  if(!val){ err.style.display='block'; err.textContent='⚠️ Informe o login/CPF.'; return; }
+  let user;
+  if(tipo === 'membro'){
+    if(cpfSoNumeros(val).length < 11){ err.style.display='block'; err.textContent='⚠️ CPF inválido.'; return; }
+    user = USERS_DB.find(u => u.role==='membro' && cpfSoNumeros(u.cpf) === cpfSoNumeros(val));
+  } else {
+    user = USERS_DB.find(u => u.role==='adm' && u.cpf.toLowerCase() === val.toLowerCase());
+  }
+  if(!user){ err.style.display='block'; err.textContent='⚠️ Usuário não encontrado.'; return; }
+  if(user.cpf === 'admin'){ err.style.display='block'; err.textContent='⚠️ O usuário master não pode ser recuperado por aqui.'; return; }
+  if(!user.pergunta || !user.resposta){
+    err.style.display='block';
+    err.innerHTML = '⚠️ Este usuário ainda não cadastrou pergunta secreta.<br>Peça ao administrador master para resetar a senha.';
+    return;
+  }
+  _recoverUser = user;
+  document.getElementById('recover-pergunta').textContent = user.pergunta;
+  document.getElementById('recover-step-1').style.display='none';
+  document.getElementById('recover-step-2').style.display='flex';
+  document.getElementById('recover-resposta').focus();
+}
+function recuperarConfirmarResposta(){
+  const err = document.getElementById('recover-error-2');
+  if(!_recoverUser){ fecharRecuperarSenha(); return; }
+  const resp = document.getElementById('recover-resposta').value;
+  if(!resp){ err.style.display='block'; err.textContent='⚠️ Digite a resposta.'; return; }
+  if(_normResp(resp) !== _normResp(_recoverUser.resposta)){
+    err.style.display='block'; err.textContent='⚠️ Resposta incorreta. Tente novamente.';
+    return;
+  }
+  document.getElementById('recover-step-2').style.display='none';
+  document.getElementById('recover-step-3').style.display='flex';
+  document.getElementById('recover-pass1').focus();
+}
+function recuperarSalvarNovaSenha(){
+  const err = document.getElementById('recover-error-3');
+  if(!_recoverUser){ fecharRecuperarSenha(); return; }
+  const p1 = document.getElementById('recover-pass1').value;
+  const p2 = document.getElementById('recover-pass2').value;
+  if(p1.length < 6){ err.style.display='block'; err.textContent='⚠️ Mínimo 6 caracteres.'; return; }
+  if(p1 !== p2){ err.style.display='block'; err.textContent='⚠️ As senhas não coincidem.'; return; }
+  const u = USERS_DB.find(x => x.id === _recoverUser.id);
+  if(!u){ err.style.display='block'; err.textContent='⚠️ Usuário não encontrado.'; return; }
+  u.senha = p1;
+  u.primeiroAcesso = false;
+  salvarLS();
+  if (typeof syncEnviarParaNuvem === 'function' && typeof GAS_WEBAPP_URL !== 'undefined' && GAS_WEBAPP_URL) {
+    try { syncEnviarParaNuvem(); } catch(e) { console.warn('Push da recuperação falhou:', e); }
+  }
+  fecharRecuperarSenha();
+  toast('✅ Senha redefinida! Faça login com sua nova senha.');
 }
 
 // Mantém doLogin como alias (chamado por quickLogin e Enter)
@@ -3788,6 +3980,15 @@ function confirmarTrocaSenha(){
     ? USERS_DB.find(u => cpfSoNumeros(u.cpf) === cpfSoNumeros(screen._userCpf))
     : USERS_DB.find(u => u.id === screen._userId);
   if(!user) return;
+  // Se o usuário ainda não tem pergunta secreta, obriga a cadastrar agora
+  if(!user.pergunta || !user.resposta){
+    const pq = document.getElementById('new-pergunta').value;
+    const rs = document.getElementById('new-resposta').value;
+    if(!pq){ errEl.textContent='Selecione uma pergunta secreta.'; errEl.style.display='block'; return; }
+    if(!rs || rs.trim().length < 2){ errEl.textContent='Informe a resposta secreta.'; errEl.style.display='block'; return; }
+    user.pergunta = pq;
+    user.resposta = _normResp(rs);
+  }
   user.senha = p1;
   user.primeiroAcesso = false;
   salvarLS();
@@ -3799,6 +4000,8 @@ function confirmarTrocaSenha(){
   screen.style.display='none';
   document.getElementById('new-pass1').value='';
   document.getElementById('new-pass2').value='';
+  const np = document.getElementById('new-pergunta'); if(np) np.value='';
+  const nr = document.getElementById('new-resposta'); if(nr) nr.value='';
   toast('✅ Senha definida com sucesso!');
   loginSuccess(user);
 }
@@ -3902,7 +4105,16 @@ function applyPermissions(){
 function renderUsuarios(){
   const lista = document.getElementById('lista-usuarios');
   if(!lista) return;
-  lista.innerHTML = USERS_DB.filter(u=>u.role==='adm').map(u=>`
+  const isMaster = currentUser && currentUser.cpf === 'admin';
+  // Mostra/esconde botões de backup somente para o admin master
+  document.querySelectorAll('#page-usuarios .master-only').forEach(el=>{
+    el.style.display = isMaster ? '' : 'none';
+  });
+  lista.innerHTML = USERS_DB
+    .filter(u=>u.role==='adm')
+    // Esconde o usuário master (admin) para os outros administradores
+    .filter(u=> isMaster || u.cpf !== 'admin')
+    .map(u=>`
     <div class="list-item">
       <div class="li-av" style="background:${u.role==='adm'?'linear-gradient(135deg,var(--ouro),var(--ouro-lite))':'linear-gradient(135deg,var(--azul-bg),#8bb7ff)'}">
         ${u.nome[0]}
@@ -3912,11 +4124,11 @@ function renderUsuarios(){
         <div class="li-sub">${'Login: '+u.cpf} ${u.primeiroAcesso?'· <span style="color:var(--ouro)">⚠️ Aguardando troca de senha</span>':''}</div>
       </div>
       <span class="tag ${u.role==='adm'?'tag-ouro':'tag-azul'}">${u.role==='adm'?'ADM':'Membro'}</span>
-      ${u.cpf === 'admin' ? '<span style="font-size:11px;color:#AAA;margin-left:8px">🔒 protegido</span>' : currentUser.id !== u.id ? `
+      ${u.cpf === 'admin' ? '<span style="font-size:11px;color:#AAA;margin-left:8px">🔒 protegido</span>' : currentUser.id === u.id ? '<span style="font-size:11px;color:#AAA;margin-left:8px">(você)</span>' : isMaster ? `
       <div style="display:flex;gap:6px;margin-left:8px">
         <button class="btn btn-secondary btn-sm" onclick="abrirModalUsuario(${u.id})" title="Editar">✏️</button>
         <button class="btn btn-danger btn-sm" onclick="excluirUsuario(${u.id})" title="Excluir">🗑️</button>
-      </div>` : '<span style="font-size:11px;color:#AAA;margin-left:8px">(você)</span>'}
+      </div>` : '<span style="font-size:11px;color:#AAA;margin-left:8px">🔒 somente o master pode editar</span>'}
     </div>`).join('') || '<p style="color:#AAA;font-size:13px">Nenhum usuário cadastrado.</p>';
 }
 
@@ -3957,6 +4169,18 @@ function abrirModalUsuario(id){
         <label>Nova Senha (deixe em branco para manter)</label>
         <input type="password" id="mu-senha" placeholder="Nova senha (opcional)">
       </div>`}
+      <div class="form-group full">
+        <label>Pergunta Secreta${!user?'*':' (opcional — para recuperação de senha)'}</label>
+        <select id="mu-pergunta">
+          <option value="">— selecione uma pergunta —</option>
+          ${PERGUNTAS_SECRETAS.map(q=>`<option value="${q}" ${user&&user.pergunta===q?'selected':''}>${q}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group full">
+        <label>Resposta Secreta${!user?'*':' (preencha se trocar a pergunta)'}</label>
+        <input type="text" id="mu-resposta" placeholder="${user&&user.resposta?'••• resposta já cadastrada •••':'Sua resposta'}" autocomplete="off">
+        <small style="color:#9ca8b7;font-size:11px;">Usada para recuperar a senha. Maiúsculas/minúsculas e espaços extras são ignorados.</small>
+      </div>
     </div>`;
   document.getElementById('modal-confirm-btn').onclick = salvarUsuario;
   // Atualiza datalist no modal
@@ -3998,6 +4222,10 @@ function salvarUsuario(){
   const senha = document.getElementById('mu-senha').value;
   const id    = parseInt(document.getElementById('mu-id').value||'0');
   const cpf   = role === 'adm' ? v('mu-login-adm').toLowerCase() : v('mu-cpf');
+  const perguntaEl = document.getElementById('mu-pergunta');
+  const respostaEl = document.getElementById('mu-resposta');
+  const pergunta = perguntaEl ? perguntaEl.value : '';
+  const resposta = respostaEl ? respostaEl.value : '';
 
   if(!nome){ toast('⚠️ Nome é obrigatório!'); return; }
   if(true){ // Validação para ambos
@@ -4011,12 +4239,21 @@ function salvarUsuario(){
     const u = USERS_DB.find(u=>u.id===id);
     if(!u) return;
     if(u.cpf === 'admin' && currentUser.cpf !== 'admin'){ toast('⚠️ A senha do usuário admin não pode ser alterada por outros administradores!'); return; }
+    // Apenas o admin master pode editar outros usuários
+    if(u.id !== currentUser.id && currentUser.cpf !== 'admin'){
+      toast('⚠️ Você só pode editar o seu próprio perfil!'); return;
+    }
     u.nome = nome; u.cpf = cpf; u.role = role;
     if(senha){ if(senha.length<6){toast('⚠️ Senha deve ter ao menos 6 caracteres!');return;} u.senha=senha; u.primeiroAcesso=true; }
+    // Atualiza pergunta/resposta apenas se algo foi alterado
+    if(pergunta && resposta){ u.pergunta = pergunta; u.resposta = _normResp(resposta); }
+    else if(pergunta && !resposta && pergunta !== u.pergunta){ toast('⚠️ Para trocar a pergunta secreta, informe também a nova resposta!'); return; }
     toast('✅ Usuário atualizado!');
   } else {
     if(!senha||senha.length<6){ toast('⚠️ Informe uma senha inicial com ao menos 6 caracteres!'); return; }
-    USERS_DB.push({id:nextUserId++, cpf, nome, senha, role, primeiroAcesso:true});
+    if(!pergunta){ toast('⚠️ Selecione uma pergunta secreta!'); return; }
+    if(!resposta || resposta.trim().length < 2){ toast('⚠️ Informe a resposta secreta (mín. 2 caracteres)!'); return; }
+    USERS_DB.push({id:nextUserId++, cpf, nome, senha, role, primeiroAcesso:true, pergunta, resposta:_normResp(resposta)});
     toast('✅ Usuário criado! Ele trocará a senha no primeiro acesso.');
   }
   salvarLS();
@@ -4028,6 +4265,7 @@ function excluirUsuario(id){
   if(id===currentUser.id){ toast('⚠️ Você não pode excluir seu próprio usuário!'); return; }
   const uAlvo = USERS_DB.find(u=>u.id===id);
   if(uAlvo && uAlvo.cpf === 'admin'){ toast('⚠️ O usuário admin não pode ser excluído!'); return; }
+  if(currentUser.cpf !== 'admin'){ toast('⚠️ Apenas o administrador master pode excluir usuários!'); return; }
   document.getElementById('confirm-msg').textContent='Excluir este usuário? Esta ação não pode ser desfeita.';
   confirmCallback=()=>{
     const idx=USERS_DB.findIndex(u=>u.id===id);
@@ -6718,6 +6956,15 @@ atualizarInfoPlanoSuperAdmin = function(){
 document.addEventListener('DOMContentLoaded', ()=>{
   // Verificar 2s após carregar (dá tempo do login automático)
   setTimeout(verificarRenovacao, 2000);
+  // Popula o select de perguntas secretas no change-pass-screen
+  const sel = document.getElementById('new-pergunta');
+  if(sel && sel.options.length <= 1){
+    PERGUNTAS_SECRETAS.forEach(q => {
+      const o = document.createElement('option');
+      o.value = q; o.textContent = q;
+      sel.appendChild(o);
+    });
+  }
 });
 
 // Fechar popup ao clicar fora — só se NÃO estiver bloqueado
