@@ -3509,10 +3509,10 @@ let DB = {
     {id:5,titulo:"👨‍👩‍👧 Conferência de Famílias",data:"2025-06-15",hora:"17h",local:"Templo Central",desc:"Toda a família"},
   ],
   patrimonio: [
-    {id:1,icone:"🏛️",nome:"Templo Principal",desc:"Próprio · 200m² · 2010",valor:220000,estado:"Próprio"},
-    {id:2,icone:"🎹",nome:"Piano Yamaha",desc:"Patrimônio · Adq. 2019",valor:18000,estado:"Ótimo"},
-    {id:3,icone:"🖥️",nome:"Equipamentos Multimídia",desc:"Projetor, Som, Câmera",valor:32000,estado:"Bom"},
-    {id:4,icone:"🚐",nome:"Van da Igreja",desc:"Sprinter 2018 · ABC-1234",valor:65000,estado:"Regular"},
+    {id:1,icone:"🏛️",nome:"Templo Principal",desc:"200m² · 2010",valor:220000,quantidade:1,posse:"Próprio",estado:"Ótimo"},
+    {id:2,icone:"🎹",nome:"Piano Yamaha",desc:"Adq. 2019",valor:18000,quantidade:1,posse:"Próprio",estado:"Ótimo"},
+    {id:3,icone:"🖥️",nome:"Equipamentos Multimídia",desc:"Projetor, Som, Câmera",valor:32000,quantidade:3,posse:"Próprio",estado:"Bom"},
+    {id:4,icone:"🚐",nome:"Van da Igreja",desc:"Sprinter 2018 · ABC-1234",valor:65000,quantidade:1,posse:"Próprio",estado:"Regular"},
   ],
   comunicados: [
     {id:1,titulo:"Conferência de Famílias — 15 de Junho",texto:"No dia 15/06 às 17h teremos nossa Conferência de Famílias. Confirme sua presença com o líder de célula.",autor:"Secretaria",data:"2025-05-29"},
@@ -5566,10 +5566,13 @@ function renderPatrimonio(){
   document.getElementById('lista-patrimonio').innerHTML=DB.patrimonio.map(p=>`
     <div class="patrim-card">
       <div class="pt-icon">${p.icone}</div>
-      <div class="pt-info"><h4>${p.nome}</h4><p>${p.desc}</p></div>
+      <div class="pt-info"><h4>${p.nome}${(p.quantidade&&p.quantidade>1)?` <span style="font-size:12px;color:var(--azul-mid);font-weight:600">×${p.quantidade}</span>`:''}</h4><p>${p.desc}</p></div>
       <div class="pt-val">
         <div style="font-size:13px;font-weight:700;color:var(--azul-mid)">${fmtMoeda(p.valor)}</div>
-        <span class="tag ${p.estado==='Próprio'||p.estado==='Ótimo'?'tag-verde':p.estado==='Bom'?'tag-azul':'tag-ouro'}">${p.estado}</span>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;margin-top:4px">
+          ${p.posse?`<span class="tag ${p.posse==='Próprio'?'tag-verde':'tag-ouro'}">${p.posse}</span>`:''}
+          <span class="tag ${p.estado==='Ótimo'?'tag-verde':p.estado==='Bom'?'tag-azul':'tag-ouro'}">${p.estado}</span>
+        </div>
       </div>
       <div style="display:flex;gap:6px;margin-left:8px">
         <button class="btn btn-secondary btn-sm" onclick="editarPatrimonio(${p.id})">✏️</button>
@@ -5619,9 +5622,11 @@ function abrirModalPatrimonio(id){
           ${grade}
         </div>
       </div>
-      <div class="form-group"><label>Estado</label><select id="mpt-estado"><option ${pt&&pt.estado==='Próprio'?'selected':''}>Próprio</option><option ${pt&&pt.estado==='Alugado'?'selected':''}>Alugado</option><option ${pt&&pt.estado==='Ótimo'?'selected':''}>Ótimo</option><option ${pt&&pt.estado==='Bom'?'selected':''}>Bom</option><option ${pt&&pt.estado==='Regular'?'selected':''}>Regular</option><option ${pt&&pt.estado==='Manutenção'?'selected':''}>Manutenção</option></select></div>
+      <div class="form-group"><label>Posse</label><select id="mpt-posse"><option ${pt&&pt.posse==='Próprio'?'selected':''}>Próprio</option><option ${pt&&pt.posse==='Alugado'?'selected':''}>Alugado</option><option ${pt&&pt.posse==='Cedido'?'selected':''}>Cedido</option></select></div>
+      <div class="form-group"><label>Estado</label><select id="mpt-estado"><option ${pt&&pt.estado==='Ótimo'?'selected':''}>Ótimo</option><option ${pt&&pt.estado==='Bom'?'selected':''}>Bom</option><option ${pt&&pt.estado==='Regular'?'selected':''}>Regular</option><option ${pt&&pt.estado==='Manutenção'?'selected':''}>Manutenção</option></select></div>
       <div class="form-group full"><label>Nome do Bem*</label><input type="text" id="mpt-nome" value="${pt?pt.nome:''}" placeholder="Nome do bem"></div>
       <div class="form-group full"><label>Descrição</label><input type="text" id="mpt-desc" value="${pt?pt.desc:''}" placeholder="Descrição, ano, marca..."></div>
+      <div class="form-group"><label>Quantidade*</label><input type="number" id="mpt-quantidade" value="${pt&&pt.quantidade?pt.quantidade:1}" placeholder="1" min="1" step="1"></div>
       <div class="form-group"><label>Valor Estimado (R$)*</label><input type="number" id="mpt-valor" value="${pt?pt.valor:''}" placeholder="0" min="0" step="100"></div>
     </div>`;
   document.getElementById('modal-confirm-btn').onclick=salvarPatrimonio;
@@ -5643,9 +5648,11 @@ function editarPatrimonio(id){abrirModalPatrimonio(id);}
 
 function salvarPatrimonio(){
   const nome=v('mpt-nome'),valor=parseFloat(document.getElementById('mpt-valor').value);
+  const quantidade=parseInt(document.getElementById('mpt-quantidade').value)||1;
   if(!nome||isNaN(valor)){toast('⚠️ Nome e valor são obrigatórios!');return;}
+  if(quantidade<1){toast('⚠️ Quantidade deve ser pelo menos 1!');return;}
   const id=parseInt(document.getElementById('mpt-id').value||'0');
-  const obj={icone:v('mpt-icone')||'🏛️',nome,desc:v('mpt-desc'),valor,estado:v('mpt-estado')};
+  const obj={icone:v('mpt-icone')||'🏛️',nome,desc:v('mpt-desc'),valor,quantidade,posse:v('mpt-posse'),estado:v('mpt-estado')};
   if(id){DB.patrimonio[DB.patrimonio.findIndex(p=>p.id===id)]={...DB.patrimonio.find(p=>p.id===id),...obj};toast('✅ Bem atualizado!');}
   else{obj.id=DB.nextId.patrimonio++;DB.patrimonio.push(obj);toast('✅ Bem cadastrado!');}
   salvarLS();
