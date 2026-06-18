@@ -11,7 +11,7 @@
 <html lang="pt-BR" style="overflow-y: auto;">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>AD — Sistema da Igreja</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -328,7 +328,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--creme);color:#1C1C2E;min-
 .data-table tr:last-child td{border-bottom:none;}
 .data-table tr:hover td{background:var(--azul-bg);}
 
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;width:100%;}
 .form-group{display:flex;flex-direction:column;gap:6px;}
 .form-group.full{grid-column:1/-1;}
 .form-group label{font-size:11px;font-weight:700;color:var(--azul);text-transform:uppercase;letter-spacing:.5px;}
@@ -385,7 +385,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--creme);color:#1C1C2E;min-
 /* MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:5000;align-items:center;justify-content:center;padding:20px;}
 .modal-overlay.open{display:flex;}
-.modal{background:white;border-radius:18px;padding:28px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25);}
+.modal{background:white;border-radius:18px;padding:28px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25);box-sizing:border-box;}
 .modal h2{font-family:'Playfair Display',serif;font-size:20px;color:var(--azul);margin-bottom:20px;}
 .modal-btns{display:flex;gap:10px;margin-top:20px;justify-content:flex-end;}
 
@@ -868,7 +868,10 @@ body.tema-light-body .tab { color: #6b7280 !important; }
   .two-col{grid-template-columns:1fr;}
   .form-grid{grid-template-columns:1fr;}
   .stats-grid{grid-template-columns:repeat(2,1fr);}
-  .modal{padding:20px;}
+  .modal{padding:20px;width:100%;height:100%;max-width:none;max-height:none;margin:0;border-radius:0;}
+  .modal-overlay{padding:0;}
+  .form-grid{display:block;}
+  .form-group{width:100%;margin-bottom:12px;}
 }
 @media(min-width:769px){#overlay{display:none!important;}}
 
@@ -938,6 +941,52 @@ body.tema-light-body .tab { color: #6b7280 !important; }
 
 body.dark-mode .preview-card { background: #161b2a; border-color: rgba(255,255,255,0.05); }
 body.dark-mode .qa-btn-compact { background: #1e293b; color: #818cf8; border-color: rgba(129,140,248,0.1); }
+
+
+/* --- CORREÇÕES DE LAYOUT ( Manus ) --- */
+html {
+    -webkit-text-size-adjust: 100%; /* Impede redimensionamento de texto no mobile ao girar */
+}
+
+/* Fixar largura máxima do container principal para não esticar infinitamente em telas ultra-wide */
+#main {
+    max-width: 1600px;
+    margin-right: auto;
+}
+
+/* Garantir que os cards e grids não quebrem o layout ao aumentar zoom */
+.card, .stat-card, .quick-btn, .evento-card, .patrim-card, .celula-card, .comuni-card {
+    flex-shrink: 0; /* Impede que os itens encolham além do conteúdo */
+    max-width: 100%;
+}
+
+/* Ajustar grids para serem mais resilientes */
+.stats-grid, .quick-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+/* Impedir que o login-right cresça demais */
+.login-right {
+    flex-shrink: 0;
+}
+
+/* Fixar tamanhos de modais */
+.modal {
+    width: 95% !important;
+    max-width: 500px !important;
+}
+
+/* Garantir que a sidebar não suma ou mude de tamanho de forma estranha */
+#sidebar {
+    width: var(--sidebar-w) !important;
+    min-width: var(--sidebar-w) !important;
+}
+
+/* Ajuste para evitar que o conteúdo "vaze" dos containers */
+* {
+    max-width: 100vw;
+}
+/* --- FIM DAS CORREÇÕES --- */
 
 </style>
 
@@ -2179,7 +2228,7 @@ window.addEventListener('load', () => {
     <div class="nav-item" onclick="showPage('tesouraria',this)"><span class="ni"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="1" y1="10" x2="23" y2="10" stroke-linecap="round"/></svg></span> Tesouraria</div>
     <div class="nav-item" onclick="showPage('patrimonio',this)"><span class="ni"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/></svg></span> Patrimônio</div>
     <div class="nav-item" onclick="showPage('relatorios',this)"><span class="ni"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="12" y1="20" x2="12" y2="10" stroke-linecap="round"/><line x1="18" y1="20" x2="18" y2="4" stroke-linecap="round"/><line x1="6" y1="20" x2="6" y2="16" stroke-linecap="round"/></svg></span> Relatórios</div>
-    <div class="nav-item" onclick="showPage('usuarios',this)"><span class="ni"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></span> Usuários</div>
+    <div class="nav-item" onclick="showPage('usuarios',this)"><span class="ni"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></span> Administradores</div>
     <div class="nav-item" id="nav-aniversariantes" onclick="showPage('aniversariantes',this)"><span class="ni">🎂</span> Aniversariantes <span id="badge-aniversariantes" style="display:none;margin-left:auto;background:linear-gradient(135deg,#e53e3e,#fc8181);color:white;font-size:9px;font-weight:800;padding:2px 7px;border-radius:20px;box-shadow:0 2px 6px rgba(229,62,62,0.45);animation:pulse-badge 1.5s ease-in-out infinite;"></span></div>
   </div>
   <div class="nav-section">
@@ -2394,7 +2443,7 @@ window.addEventListener('load', () => {
             onfocus="this.style.borderColor='var(--azul-lite)';this.style.background='white'"
             onblur="this.style.borderColor='rgba(13,43,94,0.12)';this.style.background='#f8f9fc'">
         </div>
-        <button onclick="switchTabNome('cad-membro','secretaria')" style="display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--azul),var(--azul-lite));color:white;border:none;padding:11px 16px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0;box-shadow:0 4px 14px rgba(13,43,94,0.25);transition:all .2s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
+        <button onclick="limparFormMembro();switchTabNome('cad-membro','secretaria')" style="display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--azul),var(--azul-lite));color:white;border:none;padding:11px 16px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0;box-shadow:0 4px 14px rgba(13,43,94,0.25);transition:all .2s;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
           <svg width="14" height="14" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Novo Membro
         </button>
@@ -2662,7 +2711,7 @@ window.addEventListener('load', () => {
 
 <!-- ═══ ANIVERSARIANTES (ADM) ═══ -->
 <div class="page" id="page-aniversariantes">
-  <div class="page-header"><h1>🎂 Aniversariantes</h1><p>Datas de nascimento dos membros</p></div>
+  <div class="page-header"><h1>🎂 Aniversariantes</h1><p>Datas de nascimento dos membros e administradores</p></div>
 
   <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;">
     <button class="tab active" id="tab-aniv-hoje" onclick="switchTabAniv('hoje',this)" style="flex:1;min-width:100px;padding:10px 6px;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:var(--primary);color:white;">🎉 Próximos 7 dias</button>
@@ -2946,26 +2995,6 @@ window.addEventListener('load', () => {
         </div>
       </div>
 
-      <div class="section-title" style="margin-bottom:10px;font-size:12px;">Tamanho de Fonte</div>
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px;">
-        <div class="cfg-font-btn" id="font-sm-m" onclick="aplicarFonte('sm')"
-          style="border:2px solid var(--borda);border-radius:10px;padding:10px 16px;cursor:pointer;transition:all .2s;background:white;font-size:12px;font-weight:700;color:#555;text-align:center;">
-          A<br><span style="font-size:10px;font-weight:400;color:#AAA;">Pequeno</span>
-        </div>
-        <div class="cfg-font-btn" id="font-md-m" onclick="aplicarFonte('md')"
-          style="border:2px solid var(--borda);border-radius:10px;padding:10px 16px;cursor:pointer;transition:all .2s;background:white;font-size:15px;font-weight:700;color:#555;text-align:center;">
-          A<br><span style="font-size:10px;font-weight:400;color:#AAA;">Médio</span>
-        </div>
-        <div class="cfg-font-btn" id="font-lg-m" onclick="aplicarFonte('lg')"
-          style="border:2px solid var(--borda);border-radius:10px;padding:10px 16px;cursor:pointer;transition:all .2s;background:white;font-size:19px;font-weight:700;color:#555;text-align:center;">
-          A<br><span style="font-size:10px;font-weight:400;color:#AAA;">Grande</span>
-        </div>
-        <div class="cfg-font-btn" id="font-xl-m" onclick="aplicarFonte('xl')"
-          style="border:2px solid var(--borda);border-radius:10px;padding:10px 16px;cursor:pointer;transition:all .2s;background:white;font-size:22px;font-weight:700;color:#555;text-align:center;">
-          A<br><span style="font-size:10px;font-weight:400;color:#AAA;">Muito Grande</span>
-        </div>
-      </div>
-      <div style="font-size:11px;color:#BBB;">Este texto é um exemplo da fonte atual do sistema.</div>
     </div>
   </div>
 
@@ -3112,27 +3141,7 @@ window.addEventListener('load', () => {
       </div>
     </div>
 
-    <!-- Tamanho de Fonte -->
-    <div class="section-title" style="margin-bottom:10px;font-size:12px;">Tamanho de Fonte</div>
-    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">
-      <div class="cfg-font-btn" id="font-sm" onclick="aplicarFonte('sm')"
-        style="border:2px solid var(--borda);border-radius:10px;padding:10px 18px;cursor:pointer;transition:all .2s;background:white;font-size:12px;font-weight:700;color:#555;">
-        A<br><span style="font-size:10px;font-weight:400;color:#AAA;">Pequeno</span>
-      </div>
-      <div class="cfg-font-btn" id="font-md" onclick="aplicarFonte('md')"
-        style="border:2px solid var(--borda);border-radius:10px;padding:10px 18px;cursor:pointer;transition:all .2s;background:white;font-size:15px;font-weight:700;color:#555;">
-        A<br><span style="font-size:10px;font-weight:400;color:#AAA;">Médio</span>
-      </div>
-      <div class="cfg-font-btn" id="font-lg" onclick="aplicarFonte('lg')"
-        style="border:2px solid var(--borda);border-radius:10px;padding:10px 18px;cursor:pointer;transition:all .2s;background:white;font-size:19px;font-weight:700;color:#555;">
-        A<br><span style="font-size:10px;font-weight:400;color:#AAA;">Grande</span>
-      </div>
-      <div class="cfg-font-btn" id="font-xl" onclick="aplicarFonte('xl')"
-        style="border:2px solid var(--borda);border-radius:10px;padding:10px 18px;cursor:pointer;transition:all .2s;background:white;font-size:22px;font-weight:700;color:#555;">
-        A<br><span style="font-size:10px;font-weight:400;color:#AAA;">Muito Grande</span>
-      </div>
-    </div>
-    <div style="font-size:11px;color:#BBB;margin-top:4px;">Este texto é um exemplo da fonte atual.</div>
+    <!-- Tamanho de Fonte fixo em Médio (padrão do sistema) -->
   </div>
 
   <!-- O QUE OS MEMBROS PODEM VER -->
@@ -3216,8 +3225,8 @@ window.addEventListener('load', () => {
   <!-- ACESSO RÁPIDO -->
   <div class="card master-only">
     <h3>🔑 Gestão de Usuários</h3>
-    <div class="alert alert-verde" style="margin-bottom:14px">🔑 Acesse <strong>Administração → Usuários</strong> para gerenciar usuários, permissões, backup e restauração.</div>
-    <button class="btn btn-primary" onclick="showPage('usuarios')">Ir para Usuários & Permissões →</button>
+    <div class="alert alert-verde" style="margin-bottom:14px">🔑 Acesse <strong>Administração → Administradores</strong> para gerenciar usuários, permissões, backup e restauração.</div>
+    <button class="btn btn-primary" onclick="showPage('usuarios')">Ir para Administradores & Permissões →</button>
   </div>
 
   <!-- PAINEL SUPER ADMIN —  acesso restrito -->
@@ -3255,15 +3264,15 @@ window.addEventListener('load', () => {
 </div>
 <!-- ═══ USUÁRIOS & PERMISSÕES (ADM) ═══ -->
 <div class="page" id="page-usuarios">
-  <div class="page-header"><h1>🔑 Usuários & Permissões</h1><p>Gerencie quem acessa o sistema</p></div>
+  <div class="page-header"><h1>🔑 Administradores & Permissões</h1><p>Gerencie os administradores do sistema</p></div>
   <div class="btn-row" style="margin-bottom:16px;margin-top:0;">
-    <button class="btn btn-primary" onclick="abrirModalUsuario()">+ Novo Usuário</button>
+    <button class="btn btn-primary" onclick="abrirModalUsuario()">+ Novo ADM</button>
     <button class="btn btn-ouro master-only" onclick="exportarBackup()">📥 Backup JSON</button>
     <button class="btn btn-secondary master-only" onclick="document.getElementById('input-restore').click()">📤 Restaurar</button>
     <input type="file" id="input-restore" accept=".json" style="display:none" onchange="importarBackup(event)">
   </div>
   <div class="card">
-    <h3>Usuários Cadastrados</h3>
+    <h3>Administradores Cadastrados</h3>
     <div id="lista-usuarios"></div>
   </div>
   <div class="card master-only" style="margin-top:16px">
@@ -3795,6 +3804,12 @@ function carregarLS(){
     nextUserId = Math.max(...USERS_DB.map(u => u.id || 0)) + 1;
   }
   garantirAdminPadrao();
+  // Migração: garante que todo membro tenha o array deptos
+  DB.membros.forEach(m => {
+    if(!Array.isArray(m.deptos)){
+      m.deptos = (m.depto && m.depto !== '') ? [m.depto] : [];
+    }
+  });
 }
 
 // ═══════════════════════════════════════════
@@ -4333,42 +4348,137 @@ function abrirModalUsuario(id){
   const isSelfEdit = user && currentUser && user.id === currentUser.id && !isMaster;
   document.getElementById('modal-title').textContent = isSelfEdit
     ? '🔑 Alterar Minha Senha'
-    : (user ? 'Editar Usuário' : 'Novo Usuário');
+    : (user ? 'Editar Administrador' : 'Novo Administrador');
+  const isAdm = !user || user.role === 'adm'; // formulário de admin sempre começa como adm
   document.getElementById('modal-body').innerHTML = `
     <input type="hidden" id="mu-id" value="${user?user.id:''}">
     ${isSelfEdit ? `<div class="alert alert-azul" style="margin-bottom:14px">ℹ️ Você pode alterar sua <strong>senha</strong> e sua <strong>pergunta secreta</strong>. Demais dados só podem ser alterados pelo administrador master.</div>` : ''}
     <div class="form-grid">
+
+      <!-- IDENTIFICAÇÃO -->
       <div class="form-group full"><label>Nome Completo*</label>
-        <input type="text" id="mu-nome" list="membros-list" value="${user?user.nome:''}" placeholder="Nome do usuário" onchange="autoPreencherCPF(this.value)" ${isSelfEdit?'readonly':''}>
-        <datalist id="membros-list">
-          ${DB.membros.map(m => `<option value="${m.nome}">`).join('')}
-        </datalist>
+        <input type="text" id="mu-nome" list="membros-list" value="${user?user.nome:''}" placeholder="Nome completo" onchange="autoPreencherCPF(this.value)" ${isSelfEdit?'readonly':''}>
+        <datalist id="membros-list">${DB.membros.map(m=>`<option value="${m.nome}">`).join('')}</datalist>
       </div>
-      <div class="form-group"><label>Perfil</label>
-        <select id="mu-role" onchange="toggleCampoLogin(this.value)" ${isSelfEdit?'disabled':''}>
-          <option value="membro" ${user&&user.role==='membro'?'selected':''}>Membro</option>
-          <option value="adm" ${user&&user.role==='adm'?'selected':''}>Administrador</option>
-        </select>
-      </div>
+
       <div class="form-group" id="campo-cpf-grupo" style="${user&&user.role==='adm'?'display:none':''}">
-        <label>CPF (login)*</label>
+        <label>CPF (login de membro)*</label>
         <input type="text" id="mu-cpf" value="${user&&user.cpf!=='admin'?user.cpf:''}" placeholder="000.000.000-00" oninput="maskCPF(this)" maxlength="14" ${isSelfEdit?'readonly':''}>
       </div>
       <div class="form-group" id="campo-adm-info" style="${!user||user.role!=='adm'?'display:none':''}">
-        <label>Login (Usuário)*</label>
+        <label>Login (Usuário ADM)*</label>
         <input type="text" id="mu-login-adm" value="${user&&user.role==='adm'?user.cpf:''}" placeholder="Ex: pastor_joao" ${isSelfEdit?'readonly':''}>
       </div>
-      ${!user?`
-      <div class="form-group"><label>Senha Inicial*</label>
-        <input type="password" id="mu-senha" placeholder="Mínimo 6 caracteres">
+
+      <div class="form-group"><label>Data de Nascimento</label>
+        <input type="date" id="mu-nasc" value="${user?user.nasc||'':''}">
       </div>
-      <div class="form-group full">
-        <div class="alert alert-ouro" style="margin:0">⚠️ O usuário deverá trocar a senha no primeiro acesso.</div>
+      <div class="form-group"><label>CPF</label>
+        <input type="text" id="mu-cpf-real" value="${user?user.cpfReal||'':''}" placeholder="000.000.000-00" oninput="maskCPF(this)" maxlength="14">
+      </div>
+      <div class="form-group"><label>Telefone</label>
+        <input type="tel" id="mu-tel" value="${user?user.tel||'':''}" placeholder="(00) 00000-0000">
+      </div>
+      <div class="form-group"><label>WhatsApp</label>
+        <input type="tel" id="mu-wpp" value="${user?user.wpp||'':''}" placeholder="(00) 00000-0000">
+      </div>
+      <div class="form-group"><label>E-mail</label>
+        <input type="email" id="mu-email" value="${user?user.email||'':''}" placeholder="email@email.com">
+      </div>
+      <div class="form-group"><label>Sexo</label>
+        <select id="mu-sexo">
+          <option value="">--</option>
+          <option ${user&&user.sexo==='Masculino'?'selected':''}>Masculino</option>
+          <option ${user&&user.sexo==='Feminino'?'selected':''}>Feminino</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Estado Civil</label>
+        <select id="mu-civil">
+          <option value="">--</option>
+          <option ${user&&user.civil==='Solteiro(a)'?'selected':''}>Solteiro(a)</option>
+          <option ${user&&user.civil==='Casado(a)'?'selected':''}>Casado(a)</option>
+          <option ${user&&user.civil==='Divorciado(a)'?'selected':''}>Divorciado(a)</option>
+          <option ${user&&user.civil==='Viúvo(a)'?'selected':''}>Viúvo(a)</option>
+          <option ${user&&user.civil==='União Estável'?'selected':''}>União Estável</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Função na Igreja</label>
+        <select id="mu-funcao-igreja">
+          <option value="">-- Selecione --</option>
+          <option ${user&&user.funcao==='Membro'?'selected':''}>Membro</option>
+          <option ${user&&user.funcao==='Diácono'?'selected':''}>Diácono</option>
+          <option ${user&&user.funcao==='Líder'?'selected':''}>Líder</option>
+          <option ${user&&user.funcao==='Presbítero'?'selected':''}>Presbítero</option>
+          <option ${user&&user.funcao==='Pastor'?'selected':''}>Pastor</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Departamento</label>
+        <select id="mu-depto">
+          <option value="">-- Nenhum --</option>
+          ${DB.departamentos.map(d=>`<option value="${d.nome}" ${user&&user.depto===d.nome?'selected':''}>${d.nome}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group"><label>Ministério</label>
+        <input type="text" id="mu-ministerio" value="${user?user.ministerio||'':''}" placeholder="Ex: Louvor, Ensino...">
+      </div>
+      <div class="form-group"><label>Data de Batismo</label>
+        <input type="date" id="mu-batismo" value="${user?user.batismo||'':''}">
+      </div>
+      <div class="form-group"><label>Data de Conversão</label>
+        <input type="date" id="mu-conversao" value="${user?user.conversao||'':''}">
+      </div>
+      <div class="form-group"><label>Data de Ingresso na Igreja</label>
+        <input type="date" id="mu-ingresso" value="${user?user.ingresso||'':''}">
+      </div>
+
+      <!-- ENDEREÇO -->
+      <div class="form-group"><label>Rua/Logradouro</label>
+        <input type="text" id="mu-rua" value="${user?user.rua||'':''}" placeholder="Rua, Av, etc">
+      </div>
+      <div class="form-group"><label>Número</label>
+        <input type="text" id="mu-num" value="${user?user.num||'':''}" placeholder="Nº">
+      </div>
+      <div class="form-group"><label>Bairro</label>
+        <input type="text" id="mu-bairro" value="${user?user.bairro||'':''}" placeholder="Bairro">
+      </div>
+      <div class="form-group"><label>Cidade</label>
+        <input type="text" id="mu-cidade" value="${user?user.cidade||'':''}" placeholder="Cidade">
+      </div>
+
+      <!-- OBSERVAÇÕES -->
+      <div class="form-group full"><label>Observações</label>
+        <textarea id="mu-obs" placeholder="Observações adicionais...">${user?user.obs||'':''}</textarea>
+      </div>
+
+      <!-- PERFIL / ACESSO -->
+      <div class="form-group" style="display:none">
+        <label>Perfil</label>
+        <select id="mu-role" onchange="toggleCampoLogin(this.value)" ${isSelfEdit?'disabled':''}>
+          <option value="membro" ${user&&user.role==='membro'?'selected':''}>Membro</option>
+          <option value="adm" ${!user||user.role==='adm'?'selected':''}>Administrador</option>
+        </select>
+      </div>
+
+      <!-- SENHA -->
+      ${!user?`
+      <div class="form-group full" style="margin-top:8px;padding-top:14px;border-top:1px solid rgba(0,0,0,0.06)">
+        <div style="font-size:12px;font-weight:700;color:var(--azul);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px">🔑 Acesso ao Sistema</div>
+        <div class="form-grid" style="margin:0">
+          <div class="form-group" style="margin:0"><label>Senha Inicial*</label>
+            <input type="password" id="mu-senha" placeholder="Mínimo 6 caracteres">
+          </div>
+          <div class="form-group full" style="margin:0">
+            <div class="alert alert-ouro" style="margin:0">⚠️ O administrador deverá trocar a senha no primeiro acesso.</div>
+          </div>
+        </div>
       </div>`:`
-      <div class="form-group full">
+      <div class="form-group full" style="margin-top:8px;padding-top:14px;border-top:1px solid rgba(0,0,0,0.06)">
+        <div style="font-size:12px;font-weight:700;color:var(--azul);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px">🔑 Acesso ao Sistema</div>
         <label>${isSelfEdit?'Nova Senha':'Nova Senha (deixe em branco para manter)'}</label>
-        <input type="password" id="mu-senha" placeholder="${isSelfEdit?'Digite sua nova senha (mín. 6 caracteres)':'Nova senha (opcional)'}" autofocus>
+        <input type="password" id="mu-senha" placeholder="${isSelfEdit?'Digite sua nova senha (mín. 6 caracteres)':'Nova senha (opcional)'}">
       </div>`}
+
+      <!-- PERGUNTA SECRETA -->
       <div class="form-group full">
         <label>Pergunta Secreta${!user?'*':' (opcional — para recuperação de senha)'}</label>
         <select id="mu-pergunta">
@@ -4381,23 +4491,29 @@ function abrirModalUsuario(id){
         <input type="text" id="mu-resposta" placeholder="${user&&user.resposta?'••• resposta já cadastrada •••':'Sua resposta'}" autocomplete="off">
         <small style="color:#9ca8b7;font-size:11px;">Usada para recuperar a senha. Maiúsculas/minúsculas e espaços extras são ignorados.</small>
       </div>
+
     </div>`;
   document.getElementById('modal-confirm-btn').onclick = salvarUsuario;
-  // Atualiza datalist no modal
   const dl = document.getElementById('membros-list');
-  if(dl) dl.innerHTML = DB.membros.map(m => `<option value="${m.nome}">`).join('');
+  if(dl) dl.innerHTML = DB.membros.map(m=>`<option value="${m.nome}">`).join('');
+  // Garante que o campo mu-role esteja como adm para novos usuários
+  const roleEl = document.getElementById('mu-role');
+  if(roleEl && !user) roleEl.value = 'adm';
   abrirModal();
 }
 
 function toggleCampoLogin(role){
   const cpfGrupo = document.getElementById('campo-cpf-grupo');
   const admInfo  = document.getElementById('campo-adm-info');
+  const admCadastro = document.getElementById('adm-cadastro-completo');
   if(role === 'adm'){
     if(cpfGrupo) cpfGrupo.style.display='none';
     if(admInfo)  admInfo.style.display='';
+    if(admCadastro) admCadastro.style.display='';
   } else {
     if(cpfGrupo) cpfGrupo.style.display='';
     if(admInfo)  admInfo.style.display='none';
+    if(admCadastro) admCadastro.style.display='none';
   }
 }
 
@@ -4422,6 +4538,12 @@ function salvarUsuario(){
   const senha = document.getElementById('mu-senha').value;
   const id    = parseInt(document.getElementById('mu-id').value||'0');
   const cpf   = role === 'adm' ? v('mu-login-adm').toLowerCase() : v('mu-cpf');
+  
+  const inputCpfMembro = document.getElementById('mu-cpf');
+  const inputLoginAdm = document.getElementById('mu-login-adm');
+  if(inputCpfMembro) inputCpfMembro.style.borderColor = '';
+  if(inputLoginAdm) inputLoginAdm.style.borderColor = '';
+
   const perguntaEl = document.getElementById('mu-pergunta');
   const respostaEl = document.getElementById('mu-resposta');
   const pergunta = perguntaEl ? perguntaEl.value : '';
@@ -4432,7 +4554,12 @@ function salvarUsuario(){
     if(!cpf){ toast('⚠️ CPF é obrigatório!'); return; }
     if(role === 'membro' && cpfSoNumeros(cpf).length !== 11){ toast('⚠️ CPF inválido!'); return; }
     const dup = USERS_DB.find(u => u.cpf.toLowerCase() === cpf.toLowerCase() && u.id !== id);
-    if(dup){ toast('⚠️ CPF já cadastrado para outro usuário!'); return; }
+    if(dup){ 
+      if(role === 'adm' && inputLoginAdm) inputLoginAdm.style.borderColor = 'red';
+      if(role === 'membro' && inputCpfMembro) inputCpfMembro.style.borderColor = 'red';
+      toast('⚠️ CPF/Login já cadastrado para outro usuário!'); 
+      return; 
+    }
   }
 
   if(id){
@@ -4444,6 +4571,25 @@ function salvarUsuario(){
       toast('⚠️ Você só pode editar o seu próprio perfil!'); return;
     }
     u.nome = nome; u.cpf = cpf; u.role = role;
+    // Salva todos os dados pessoais (independente do perfil)
+    u.nasc = v('mu-nasc');
+    u.cpfReal = v('mu-cpf-real');
+    u.tel = v('mu-tel');
+    u.wpp = v('mu-wpp');
+    u.email = v('mu-email');
+    u.sexo = v('mu-sexo');
+    u.civil = v('mu-civil');
+    u.funcao = v('mu-funcao-igreja');
+    u.depto = v('mu-depto');
+    u.ministerio = v('mu-ministerio');
+    u.batismo = v('mu-batismo');
+    u.conversao = v('mu-conversao');
+    u.ingresso = v('mu-ingresso');
+    u.rua = v('mu-rua');
+    u.num = v('mu-num');
+    u.bairro = v('mu-bairro');
+    u.cidade = v('mu-cidade');
+    u.obs = v('mu-obs');
     if(senha){ if(senha.length<6){toast('⚠️ Senha deve ter ao menos 6 caracteres!');return;} u.senha=senha; u.primeiroAcesso=true; }
     // Atualiza pergunta/resposta apenas se algo foi alterado
     if(pergunta && resposta){ u.pergunta = pergunta; u.resposta = _normResp(resposta); }
@@ -4453,7 +4599,27 @@ function salvarUsuario(){
     if(!senha||senha.length<6){ toast('⚠️ Informe uma senha inicial com ao menos 6 caracteres!'); return; }
     if(!pergunta){ toast('⚠️ Selecione uma pergunta secreta!'); return; }
     if(!resposta || resposta.trim().length < 2){ toast('⚠️ Informe a resposta secreta (mín. 2 caracteres)!'); return; }
-    USERS_DB.push({id:nextUserId++, cpf, nome, senha, role, primeiroAcesso:true, pergunta, resposta:_normResp(resposta)});
+    const novoUser = {id:nextUserId++, cpf, nome, senha, role, primeiroAcesso:true, pergunta, resposta:_normResp(resposta)};
+    // Salva todos os dados pessoais
+    novoUser.nasc = v('mu-nasc');
+    novoUser.cpfReal = v('mu-cpf-real');
+    novoUser.tel = v('mu-tel');
+    novoUser.wpp = v('mu-wpp');
+    novoUser.email = v('mu-email');
+    novoUser.sexo = v('mu-sexo');
+    novoUser.civil = v('mu-civil');
+    novoUser.funcao = v('mu-funcao-igreja');
+    novoUser.depto = v('mu-depto');
+    novoUser.ministerio = v('mu-ministerio');
+    novoUser.batismo = v('mu-batismo');
+    novoUser.conversao = v('mu-conversao');
+    novoUser.ingresso = v('mu-ingresso');
+    novoUser.rua = v('mu-rua');
+    novoUser.num = v('mu-num');
+    novoUser.bairro = v('mu-bairro');
+    novoUser.cidade = v('mu-cidade');
+    novoUser.obs = v('mu-obs');
+    USERS_DB.push(novoUser);
     toast('✅ Usuário criado! Ele trocará a senha no primeiro acesso.');
   }
   salvarLS();
@@ -4548,7 +4714,7 @@ function showPage(name, navEl){
   else document.querySelectorAll('.nav-item').forEach(n=>{
     if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes("'"+name+"'")) n.classList.add('active');
   });
-  const titles={dashboard:'Página Inicial',radio:'Rádio Gospel',admindash:'Dashboard',secretaria:'Secretaria',tesouraria:'Tesouraria',departamentos:'Departamentos',eventos:'Eventos & Cultos',patrimonio:'Patrimônio',relatorios:'Relatórios',comunicados:'Comunicados',meuperfil:'Meu Perfil',configuracoes:'Configurações',usuarios:'Usuários & Permissões',aniversariantes:'Aniversariantes'};
+  const titles={dashboard:'Página Inicial',radio:'Rádio Gospel',admindash:'Dashboard',secretaria:'Secretaria',tesouraria:'Tesouraria',departamentos:'Departamentos',eventos:'Eventos & Cultos',patrimonio:'Patrimônio',relatorios:'Relatórios',comunicados:'Comunicados',meuperfil:'Meu Perfil',configuracoes:'Configurações',usuarios:'Administradores & Permissões',aniversariantes:'Aniversariantes'};
   document.getElementById('topbar-title').textContent=titles[name]||name;
   if(window.innerWidth<=768) closeSidebar();
   window.scrollTo(0,0);
@@ -4836,6 +5002,21 @@ function salvarMembro(){
   const senha  = document.getElementById('m-senha').value;
   const senha2 = document.getElementById('m-senha2').value;
   const cpfVal = v('m-cpf');
+  const inputCpf = document.getElementById('m-cpf');
+  if(inputCpf) inputCpf.style.borderColor = '';
+
+  if(cpfVal){
+    const cpfNum = cpfSoNumeros(cpfVal);
+    if(cpfNum.length === 11){
+      const duplicado = DB.membros.find(m => m.id !== id && cpfSoNumeros(m.cpf||'') === cpfNum);
+      if(duplicado){
+        if(inputCpf) inputCpf.style.borderColor = 'red';
+        toast('⚠️ Este CPF já está cadastrado para o membro: ' + duplicado.nome);
+        return;
+      }
+    }
+  }
+
   if(habilitar && !senha && !id){
     // sem senha definida → usa padrão 123456, membro troca no primeiro acesso
   }
@@ -4878,7 +5059,10 @@ function salvarMembro(){
   if(id){
     const idx=DB.membros.findIndex(m=>m.id===id);
     const cpfAntigo = DB.membros[idx].cpf;
+    const deptosAntigos = DB.membros[idx].deptos;
     DB.membros[idx]={...DB.membros[idx],...obj};
+    // Preserva o array deptos (gerenciado pela página de Departamentos)
+    if(Array.isArray(deptosAntigos)) DB.membros[idx].deptos = deptosAntigos;
     toastMsg = '✅ Membro atualizado!';
 
     // Se CPF mudou, atualizar o CPF do usuário vinculado
@@ -4888,6 +5072,8 @@ function salvarMembro(){
     }
   } else {
     obj.id=DB.nextId.membros++;
+    // Inicializa deptos como array a partir do campo depto
+    obj.deptos = (obj.depto && obj.depto !== '') ? [obj.depto] : [];
     DB.membros.push(obj);
     toastMsg = '✅ Membro cadastrado!';
   }
@@ -5216,9 +5402,10 @@ function renderDepartamentos(){
   if(btnArea) btnArea.innerHTML = isAdm ? `<button class="btn btn-primary" onclick="abrirModalDepto()">+ Novo Departamento</button>` : '';
   
   container.innerHTML = DB.departamentos.map(d => {
-    const membrosDepto = DB.membros.filter(m => m.depto === d.nome);
-    // membros disponíveis para adicionar (que não estão neste depto)
-    const disponiveis = DB.membros.filter(m => m.depto !== d.nome);
+    // Usa deptos (array) para verificar pertencimento ao departamento
+    const membrosDepto = DB.membros.filter(m => Array.isArray(m.deptos) && m.deptos.includes(d.nome));
+    // Membros disponíveis: apenas os que ainda NÃO estão neste depto
+    const disponiveis = DB.membros.filter(m => !(Array.isArray(m.deptos) && m.deptos.includes(d.nome)));
     return `
     <div class="card" style="padding:12px 14px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
@@ -5246,7 +5433,7 @@ function renderDepartamentos(){
 function abrirModalAdicionarMembro(deptoId){
   const d = DB.departamentos.find(x=>x.id===deptoId);
   if(!d) return;
-  const disponiveis = DB.membros.filter(m => m.depto !== d.nome && m.status === 'Ativo');
+  const disponiveis = DB.membros.filter(m => !(Array.isArray(m.deptos) && m.deptos.includes(d.nome)) && m.status === 'Ativo');
   document.getElementById('modal-title').textContent = `Adicionar Membro — ${d.nome}`;
   document.getElementById('modal-body').innerHTML = disponiveis.length ? `
     <div class="form-group full">
@@ -5269,7 +5456,8 @@ function confirmarAdicionarMembro(){
   if(!membroId){ toast('⚠️ Selecione um membro!'); return; }
   const m = DB.membros.find(x=>x.id===membroId);
   if(!m) return;
-  m.depto = deptoNome;
+  if(!Array.isArray(m.deptos)) m.deptos = (m.depto && m.depto !== '') ? [m.depto] : [];
+  if(!m.deptos.includes(deptoNome)) m.deptos.push(deptoNome);
   salvarLS();
   toast(`✅ ${m.nome} adicionado ao departamento ${deptoNome}!`);
   fecharModal();
@@ -5281,7 +5469,7 @@ function removerMembroDepto(membroId, deptoNome){
   if(!m) return;
   document.getElementById('confirm-msg').textContent=`Remover ${m.nome} do departamento ${deptoNome}?`;
   confirmCallback=()=>{
-    m.depto = '';
+    if(Array.isArray(m.deptos)) m.deptos = m.deptos.filter(n => n !== deptoNome);
     salvarLS();
     toast(`🗑️ ${m.nome} removido do departamento.`);
     fecharConfirm();
@@ -5392,11 +5580,45 @@ function renderPatrimonio(){
 
 function abrirModalPatrimonio(id){
   const pt=id?DB.patrimonio.find(p=>p.id===id):null;
+  const iconeAtual = pt?pt.icone:'🏛️';
+  const emojisPatrimonio = [
+    {cat:'Templo & Estrutura', itens:['🏛️','⛪','🏠','🏢','🏗️','🚪','🪟','🧱','🏟️','🛖']},
+    {cat:'Mobiliário', itens:['🪑','🛋️','🛏️','🚿','🪞','🗄️','📦','🗃️','🪣','🧺']},
+    {cat:'Tecnologia & Som', itens:['🖥️','💻','📱','🎙️','🎚️','🔊','📡','📷','📸','🎥']},
+    {cat:'Instrumentos Musicais', itens:['🎹','🎸','🎺','🥁','🎻','🪗','🎷','🪘','🎵','🎼']},
+    {cat:'Transporte', itens:['🚐','🚌','🚗','🚙','🏍️','🚑','⛽','🔑','🗝️','🅿️']},
+    {cat:'Ferramentas & Manutenção', itens:['🔧','🔨','🪛','🔩','🪚','🛠️','⚙️','🧰','🔌','💡']},
+    {cat:'Decoração & Culto', itens:['✝️','🕯️','📖','🙏','📿','🕊️','⭐','🌟','🏅','🎗️']},
+    {cat:'Cozinha & Copa', itens:['🍽️','🥄','🫙','🧃','☕','🍵','🥘','🧊','🪤','🧹']},
+    {cat:'Escritório', itens:['🖨️','📠','📋','📁','🗂️','✏️','📝','🖊️','📌','📎']},
+    {cat:'Segurança & Utilidade', itens:['🔐','🔒','📹','🚨','🧯','🪜','💧','🌡️','🔦','🧲']},
+  ];
+
+  const grade = emojisPatrimonio.map(grupo => `
+    <div style="margin-bottom:10px">
+      <div style="font-size:10px;font-weight:700;color:var(--azul-mid);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px">${grupo.cat}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px">
+        ${grupo.itens.map(e=>`
+          <button type="button" onclick="selecionarEmojiPt('${e}')"
+            id="emoji-btn-${e}"
+            style="width:34px;height:34px;font-size:18px;border-radius:8px;border:2px solid ${e===iconeAtual?'var(--azul)':'rgba(0,0,0,0.08)'};background:${e===iconeAtual?'var(--azul-bg)':'white'};cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;padding:0;"
+            title="${e}">${e}</button>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+
   document.getElementById('modal-title').textContent=pt?'Editar Bem':'Cadastrar Bem';
   document.getElementById('modal-body').innerHTML=`
     <input type="hidden" id="mpt-id" value="${pt?pt.id:''}">
+    <input type="hidden" id="mpt-icone" value="${iconeAtual}">
     <div class="form-grid">
-      <div class="form-group"><label>Ícone (emoji)</label><input type="text" id="mpt-icone" value="${pt?pt.icone:'🏛️'}" placeholder="🏛️" maxlength="2"></div>
+      <div class="form-group full">
+        <label>Ícone — selecionado: <span id="mpt-icone-preview" style="font-size:20px;vertical-align:middle">${iconeAtual}</span></label>
+        <div style="background:#f8fafc;border:1px solid rgba(0,0,0,0.07);border-radius:10px;padding:12px;max-height:220px;overflow-y:auto;margin-top:6px">
+          ${grade}
+        </div>
+      </div>
       <div class="form-group"><label>Estado</label><select id="mpt-estado"><option ${pt&&pt.estado==='Próprio'?'selected':''}>Próprio</option><option ${pt&&pt.estado==='Alugado'?'selected':''}>Alugado</option><option ${pt&&pt.estado==='Ótimo'?'selected':''}>Ótimo</option><option ${pt&&pt.estado==='Bom'?'selected':''}>Bom</option><option ${pt&&pt.estado==='Regular'?'selected':''}>Regular</option><option ${pt&&pt.estado==='Manutenção'?'selected':''}>Manutenção</option></select></div>
       <div class="form-group full"><label>Nome do Bem*</label><input type="text" id="mpt-nome" value="${pt?pt.nome:''}" placeholder="Nome do bem"></div>
       <div class="form-group full"><label>Descrição</label><input type="text" id="mpt-desc" value="${pt?pt.desc:''}" placeholder="Descrição, ano, marca..."></div>
@@ -5404,6 +5626,17 @@ function abrirModalPatrimonio(id){
     </div>`;
   document.getElementById('modal-confirm-btn').onclick=salvarPatrimonio;
   abrirModal();
+}
+
+function selecionarEmojiPt(emoji){
+  document.getElementById('mpt-icone').value = emoji;
+  document.getElementById('mpt-icone-preview').textContent = emoji;
+  // Destaca o selecionado e remove dos outros
+  document.querySelectorAll('[id^="emoji-btn-"]').forEach(btn => {
+    const isSelected = btn.id === 'emoji-btn-' + emoji;
+    btn.style.border = isSelected ? '2px solid var(--azul)' : '2px solid rgba(0,0,0,0.08)';
+    btn.style.background = isSelected ? 'var(--azul-bg)' : 'white';
+  });
 }
 
 function editarPatrimonio(id){abrirModalPatrimonio(id);}
@@ -5494,7 +5727,7 @@ function renderRelatorios(){
 
   document.getElementById('rel-celulas') && (document.getElementById('rel-celulas').innerHTML=
     DB.departamentos.map(d=>{
-      const cnt=DB.membros.filter(m=>m.depto===d.nome).length;
+      const cnt=DB.membros.filter(m=>Array.isArray(m.deptos)?m.deptos.includes(d.nome):m.depto===d.nome).length;
       return `<div class="fin-item"><div class="fin-header"><span class="fin-label">${d.nome}</span><span class="fin-val">${cnt} membros</span></div>
       <div class="bar"><div class="bar-fill" style="width:${Math.min(cnt*8,100)}%;background:var(--azul-lite)"></div></div></div>`;
     }).join(''));
@@ -5675,32 +5908,16 @@ function aplicarTema(tema, quiet = false) {
 }
 
 // ═══════════════════════════════════════════
-//  CONFIGURAÇÕES — FONTE
+//  FONTE — fixa em tamanho Médio (padrão do sistema)
 // ═══════════════════════════════════════════
-const FONTES = {sm:0.85, md:1.0, lg:1.15, xl:1.3};
-
-function aplicarFonte(tamanho) {
-  const scale = FONTES[tamanho] || 1.0;
+function aplicarFonte() {
   const app = document.getElementById('app');
   if(app){
-    app.style.zoom = scale;
-    if(scale !== 1.0){
-      app.style.transform = 'scale('+scale+')';
-      app.style.transformOrigin = 'top left';
-      app.style.width = (100/scale)+'%';
-    } else {
-      app.style.transform = '';
-      app.style.transformOrigin = '';
-      app.style.width = '';
-    }
+    app.style.zoom = '';
+    app.style.transform = '';
+    app.style.transformOrigin = '';
+    app.style.width = '';
   }
-  document.querySelectorAll('.cfg-font-btn').forEach(b=>b.classList.remove('ativo'));
-  [document.getElementById('font-'+tamanho), document.getElementById('font-'+tamanho+'-m')]
-    .forEach(b=>{ if(b) b.classList.add('ativo'); });
-  const conf = JSON.parse(localStorage.getItem(LS_KEY_CONF)||'{}');
-  conf.fonte = tamanho;
-  localStorage.setItem(LS_KEY_CONF, JSON.stringify(conf));
-  toast('✅ Fonte atualizada!');
 }
 
 // ═══════════════════════════════════════════
@@ -5911,12 +6128,8 @@ function carregarConfiguracoes() {
       if(btn) btn.classList.add('ativo');
     }
 
-    // fonte
-    if(conf.fonte) aplicarFonte(conf.fonte);
-    else {
-      const btn = document.getElementById('font-md');
-      if(btn) btn.classList.add('ativo');
-    }
+    // fonte: removida a opção de alterar — sistema sempre usa o tamanho Médio (padrão)
+    aplicarFonte('md');
 
     // permissões
     if(conf.permissoes) {
@@ -6780,7 +6993,8 @@ function atualizarBadgeAniversariantes() {
   // ── Aniversariantes ──
   const bdAnivSidebar = document.getElementById('badge-aniversariantes');
   const bdAnivQA      = document.getElementById('qa-badge-aniversariantes');
-  const anivHoje = (DB.membros || []).filter(m => m.nasc && diasAteAniversario(m.nasc) === 0);
+  const todosPessoas = [...(DB.membros || []), ...USERS_DB.filter(u => u.role === 'adm')];
+  const anivHoje = todosPessoas.filter(m => m.nasc && diasAteAniversario(m.nasc) === 0);
   const anivTxt  = anivHoje.length === 1 ? '🎂 Hoje!' : `🎂 ${anivHoje.length}`;
   const anivShow = anivHoje.length > 0;
   if (bdAnivSidebar) { bdAnivSidebar.textContent = anivTxt; bdAnivSidebar.style.display = anivShow ? 'inline-block' : 'none'; }
@@ -6811,7 +7025,8 @@ function switchTabAniv(aba, btn) {
     }
   });
 
-  const membros = (DB.membros || []).filter(m => m.nasc);
+  const todosPessoas = [...(DB.membros || []), ...USERS_DB.filter(u => u.role === 'adm')];
+  const membros = todosPessoas.filter(m => m.nasc);
   const hoje = new Date();
 
   if (aba === 'hoje') {
@@ -7374,7 +7589,8 @@ document.getElementById('renovacao-overlay').addEventListener('click', function(
 // ── Verifica aniversariantes ao logar e avisa o ADM ────────
 function verificarAniversariantesHoje(){
   if(!currentUser || currentUser.role !== 'adm') return;
-  const hoje = (DB.membros||[]).filter(m =>
+  const todosPessoas = [...(DB.membros || []), ...USERS_DB.filter(u => u.role === 'adm')];
+  const hoje = todosPessoas.filter(m =>
     m.nasc && diasAteAniversario(m.nasc) === 0 && !anivJaEnviado(m.nome)
   );
   if(!hoje.length) return;
