@@ -3260,6 +3260,23 @@ window.addEventListener('load', () => {
     <div style="font-size:11px;color:rgba(255,255,255,0.25);text-align:center;margin-top:4px;">
       🔒 Acesso restrito ao desenvolvedor
     </div>
+
+    <!-- ╔═══ ATUALIZAR SISTEMA (GitHub Deploy) ═══╗ -->
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);">
+      <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">🚀 Deploy do Sistema</div>
+      <div style="padding:12px;background:rgba(52,211,153,0.06);border:1px solid rgba(52,211,153,0.15);border-radius:10px;margin-bottom:12px;">
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:4px;">Repositório</div>
+        <div style="font-size:12px;color:#6ee7b7;font-weight:600;">congregacaoefraimrealengo-netizen / Igrejaappnew</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:2px;">branch: main → index.html</div>
+      </div>
+      <button onclick="atualizarSistemaGitHub()" id="btn-github-deploy"
+        style="width:100%;padding:13px;border-radius:10px;border:1.5px solid rgba(52,211,153,0.4);background:rgba(52,211,153,0.1);color:#6ee7b7;font-size:13px;font-weight:700;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px;"
+        onmouseover="this.style.background='rgba(52,211,153,0.2)'" onmouseout="this.style.background='rgba(52,211,153,0.1)'">
+        <span id="btn-github-deploy-icon">📤</span>
+        <span id="btn-github-deploy-label">Publicar Versão Atual</span>
+      </button>
+      <div id="github-deploy-status" style="display:none;margin-top:10px;padding:10px 12px;border-radius:8px;font-size:12px;text-align:center;"></div>
+    </div>
   </div>
 </div>
 <!-- ═══ USUÁRIOS & PERMISSÕES (ADM) ═══ -->
@@ -7691,6 +7708,78 @@ function liberarPlanoSelecionado(){
     toast('⚠️ Selecione um plano primeiro!'); return;
   }
   liberarPlanoManual(_planoSelecionadoModal);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  DEPLOY AUTOMÁTICO — Publica index.html no GitHub via GAS
+// ═══════════════════════════════════════════════════════════════
+async function atualizarSistemaGitHub() {
+  if (!isSuperAdmin()) { toast('⚠️ Acesso negado!'); return; }
+
+  const btn        = document.getElementById('btn-github-deploy');
+  const btnIcon    = document.getElementById('btn-github-deploy-icon');
+  const btnLabel   = document.getElementById('btn-github-deploy-label');
+  const statusDiv  = document.getElementById('github-deploy-status');
+
+  // Estado: carregando
+  btn.disabled = true;
+  btn.style.opacity = '0.7';
+  btnIcon.textContent  = '⏳';
+  btnLabel.textContent = 'Publicando...';
+  statusDiv.style.display = 'none';
+
+  try {
+    // Captura o HTML completo do app atual
+    const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+    const payload = {
+      action: 'github_push',
+      content: htmlContent
+    };
+
+    const resp = await fetch(GAS_WEBAPP_URL + '?action=github_push', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await resp.json();
+
+    if (data.ok) {
+      btnIcon.textContent  = '✅';
+      btnLabel.textContent = 'Publicado com sucesso!';
+      statusDiv.style.display = 'block';
+      statusDiv.style.background = 'rgba(52,211,153,0.12)';
+      statusDiv.style.border = '1px solid rgba(52,211,153,0.3)';
+      statusDiv.style.color = '#6ee7b7';
+      statusDiv.textContent = '✅ ' + (data.mensagem || 'Deploy enviado! O Netlify atualizará em instantes.');
+      toast('✅ Sistema publicado no GitHub!');
+      setTimeout(() => {
+        btnIcon.textContent  = '📤';
+        btnLabel.textContent = 'Publicar Versão Atual';
+        btn.disabled = false;
+        btn.style.opacity = '1';
+      }, 4000);
+    } else {
+      throw new Error(data.mensagem || 'Erro desconhecido');
+    }
+
+  } catch (err) {
+    btnIcon.textContent  = '❌';
+    btnLabel.textContent = 'Erro ao publicar';
+    statusDiv.style.display = 'block';
+    statusDiv.style.background = 'rgba(239,68,68,0.12)';
+    statusDiv.style.border = '1px solid rgba(239,68,68,0.3)';
+    statusDiv.style.color = '#fca5a5';
+    statusDiv.textContent = '❌ ' + err.message;
+    toast('❌ Falha no deploy: ' + err.message);
+    setTimeout(() => {
+      btnIcon.textContent  = '📤';
+      btnLabel.textContent = 'Publicar Versão Atual';
+      btn.disabled = false;
+      btn.style.opacity = '1';
+    }, 4000);
+  }
 }
 
 </script>
