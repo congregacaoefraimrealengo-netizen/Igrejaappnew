@@ -2189,7 +2189,7 @@ window.addEventListener('load', () => {
 </div>
 
 <!-- APP -->
-<div id="app" class="visible">
+<div id="app" class="">
 <div id="overlay" onclick="closeSidebar()" class=""></div>
 
 <!-- SIDEBAR -->
@@ -2256,7 +2256,7 @@ window.addEventListener('load', () => {
 <header id="topbar">
   <button id="menu-btn" onclick="toggleSidebar()"><svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
   <button id="back-btn" onclick="goBack()" style="background:none;border:none;cursor:pointer;font-size:20px;color:var(--primary);margin-right:10px;display:none;"><i class="ni">⬅️</i></button><div id="topbar-title">Configurações</div>
-  <div id="topbar-date">quinta-feira, 18 de junho</div>
+  <div id="topbar-date">sexta-feira, 19 de junho</div>
   <div class="tb-avatar" id="tb-av" onclick="currentUser&amp;&amp;currentUser.role==='adm'?showPage('configuracoes'):showPage('meuperfil')" title="Meu Perfil" style="cursor:pointer;">A</div>
 </header>
 
@@ -2270,7 +2270,7 @@ window.addEventListener('load', () => {
   <div class="welcome-banner" style="position:relative;">
     <h2 id="dash-welcome">Bem-vindo, Administrador!</h2>
     <p id="dash-church-label">Reino de deus</p>
-    <div class="verse" id="dash-verse">"Entrega o teu caminho ao Senhor; confia nele, e o mais ele fará." — Salmos 37:5</div>
+    <div class="verse" id="dash-verse">"O nome do Senhor é uma torre forte; o justo corre para ela e fica seguro." — Provérbios 18:10</div>
   </div>
 
   <!-- ═══ HOME DO MEMBRO (visível apenas para role=membro) ═══ -->
@@ -2334,34 +2334,34 @@ window.addEventListener('load', () => {
         <div style="font-size:24px;margin-bottom:6px;">💰</div>
         <div style="font-size:10px;font-weight:700;color:var(--azul);line-height:1.2;">Tesouraria</div>
       </div>
-      <div id="qa-btn-eventos" onclick="showPage('eventos')" style="position:relative;background:white;border-radius:14px;padding:14px 8px;text-align:center;cursor:pointer;box-shadow:var(--shadow);border:1px solid var(--borda);transition:all .2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+      <div id="qa-btn-eventos" onclick="showPage('eventos')" style="position: relative; background: white; border-radius: 14px; padding: 14px 8px; text-align: center; cursor: pointer; box-shadow: var(--shadow); border: 1px solid var(--borda); transition: 0.2s; transform: translateY(0px);" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
         <span id="qa-badge-eventos" style="display: inline-block; position: absolute; top: 6px; right: 6px; background: linear-gradient(135deg, rgb(38, 83, 160), rgb(79, 140, 255)); color: white; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 20px; box-shadow: rgba(38, 83, 160, 0.4) 0px 2px 6px;">1</span>
         <div style="font-size:24px;margin-bottom:6px;">📅</div>
         <div style="font-size:10px;font-weight:700;color:var(--azul);line-height:1.2;">Eventos</div>
       </div>
-      <div id="qa-btn-avisos" onclick="showPage('comunicados')" style="position:relative;background:white;border-radius:14px;padding:14px 8px;text-align:center;cursor:pointer;box-shadow:var(--shadow);border:1px solid var(--borda);transition:all .2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+      <div id="qa-btn-avisos" onclick="showPage('comunicados')" style="position: relative; background: white; border-radius: 14px; padding: 14px 8px; text-align: center; cursor: pointer; box-shadow: var(--shadow); border: 1px solid var(--borda); transition: 0.2s; transform: translateY(0px);" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
         <span id="qa-badge-avisos" style="display: inline-block; position: absolute; top: 6px; right: 6px; background: linear-gradient(135deg, rgb(229, 62, 62), rgb(252, 129, 129)); color: white; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 20px; box-shadow: rgba(229, 62, 62, 0.4) 0px 2px 6px;">1</span>
         <div style="font-size:24px;margin-bottom:6px;">📢</div>
         <div style="font-size:10px;font-weight:700;color:var(--azul);line-height:1.2;">Avisos</div>
       </div>
-      <div id="qa-btn-aniversariantes" onclick="showPage('aniversariantes')" style="position:relative;background:linear-gradient(135deg,#fffbf0,#fff8e1);border-radius:14px;padding:14px 8px;text-align:center;cursor:pointer;box-shadow:var(--shadow);border:1.5px solid rgba(200,150,12,0.25);transition:all .2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+      <div id="qa-btn-aniversariantes" onclick="showPage('aniversariantes')" style="position: relative; background: linear-gradient(135deg, rgb(255, 251, 240), rgb(255, 248, 225)); border-radius: 14px; padding: 14px 8px; text-align: center; cursor: pointer; box-shadow: var(--shadow); border: 1.5px solid rgba(200, 150, 12, 0.25); transition: 0.2s; transform: translateY(0px);" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
         <span id="qa-badge-aniversariantes" style="display:none;position:absolute;top:6px;right:6px;background:linear-gradient(135deg,#C8960C,#F0C040);color:#0D2B5E;font-size:9px;font-weight:800;padding:2px 6px;border-radius:20px;box-shadow:0 2px 6px rgba(200,150,12,0.5);animation:pulse-badge 1.5s ease-in-out infinite;">🎂 0</span>
         <div style="font-size:24px;margin-bottom:6px;">🎂</div>
         <div style="font-size:10px;font-weight:700;color:var(--azul);line-height:1.2;">Aniversários</div>
       </div>
-      <div onclick="showPage('patrimonio')" style="background:white;border-radius:14px;padding:14px 8px;text-align:center;cursor:pointer;box-shadow:var(--shadow);border:1px solid var(--borda);transition:all .2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+      <div onclick="showPage('patrimonio')" style="background: white; border-radius: 14px; padding: 14px 8px; text-align: center; cursor: pointer; box-shadow: var(--shadow); border: 1px solid var(--borda); transition: 0.2s; transform: translateY(0px);" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
         <div style="font-size:24px;margin-bottom:6px;">🏛️</div>
         <div style="font-size:10px;font-weight:700;color:var(--azul);line-height:1.2;">Patrimônio</div>
       </div>
-      <div onclick="showPage('departamentos')" style="background:white;border-radius:14px;padding:14px 8px;text-align:center;cursor:pointer;box-shadow:var(--shadow);border:1px solid var(--borda);transition:all .2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+      <div onclick="showPage('departamentos')" style="background: white; border-radius: 14px; padding: 14px 8px; text-align: center; cursor: pointer; box-shadow: var(--shadow); border: 1px solid var(--borda); transition: 0.2s; transform: translateY(0px);" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
         <div style="font-size:24px;margin-bottom:6px;">🏢</div>
         <div style="font-size:10px;font-weight:700;color:var(--azul);line-height:1.2;">Departamentos</div>
       </div>
-      <div onclick="showPage('relatorios')" style="background:white;border-radius:14px;padding:14px 8px;text-align:center;cursor:pointer;box-shadow:var(--shadow);border:1px solid var(--borda);transition:all .2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+      <div onclick="showPage('relatorios')" style="background: white; border-radius: 14px; padding: 14px 8px; text-align: center; cursor: pointer; box-shadow: var(--shadow); border: 1px solid var(--borda); transition: 0.2s; transform: translateY(0px);" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
         <div style="font-size:24px;margin-bottom:6px;">📊</div>
         <div style="font-size:10px;font-weight:700;color:var(--azul);line-height:1.2;">Relatórios</div>
       </div>
-      <div onclick="showPage('biblia');bibIrPara('PSA',23)" style="grid-column:span 4;background:linear-gradient(135deg,#fffbf0,#fff8e1);border-radius:14px;padding:14px 20px;text-align:center;cursor:pointer;box-shadow:var(--shadow);border:1.5px solid rgba(200,150,12,0.25);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:10px;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+      <div onclick="showPage('biblia');bibIrPara('PSA',23)" style="grid-column: span 4; background: linear-gradient(135deg, rgb(255, 251, 240), rgb(255, 248, 225)); border-radius: 14px; padding: 14px 20px; text-align: center; cursor: pointer; box-shadow: var(--shadow); border: 1.5px solid rgba(200, 150, 12, 0.25); transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; transform: translateY(0px);" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
         <span style="font-size:20px;">📖</span>
         <span style="font-size:13px;font-weight:700;color:var(--azul);">Bíblia Online</span>
       </div>
@@ -2370,25 +2370,25 @@ window.addEventListener('load', () => {
     <div class="card" style="margin-bottom:16px;background:linear-gradient(135deg,#f7f9ff,#eef3ff);border:1.5px solid rgba(13,43,94,0.08);">
       <h3>🌍 Mundo Gospel</h3>
       <div id="adm-gospel-preview">
-    <div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;" onclick="window.open('https://news.google.com/rss/articles/CBMiogFBVV95cUxNQWNhMkNXYWxjbVA1LW81YXdLWXVhek02elpYaHdXQXRkcjJqSC0yQnZ4UFNaaHVKVVAybS1MSDUxa2tHQ0FsbzhqTFZPbllSYXAxWW1QUVVzZVo1MDYyS1NwalBYXzBjc2ZvY0VGei1wS3BkSXpCYnh1V1BVOGpCRVV0cmZrNU5hVkd0NnNNTkNXRDFlSXZqTUxadGRrZ1lqQWc?oc=5','_blank')">
-      <div style="width:38px;min-width:38px;height:38px;background:var(--azul-bg);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">✝️</div>
-      <div style="flex:1;min-width:0;">
-        <div style="font-size:12px;font-weight:700;color:#1C1C2E;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Kaká abre desafio bíblico da YouVersion durante a Copa do Mundo de 2026</div>
-        <div style="font-size:10px;color:var(--ouro);font-weight:700;margin-top:3px;">Exibir Gospel · 18 de jun., 03:41</div>
-      </div>
-    </div>
-    <div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;" onclick="window.open('https://news.google.com/rss/articles/CBMiqgFBVV95cUxNclJXb3MxU0hLS2FsYldISnRNQ2x0UVFEN1BIRGZDTlRHNk9Fc2t4RXdHUktTY05EVmxnczFpS2oycjVKOW9uMS1RY3NKaG1vbVJHeFRPTHcya29sZXJPZWZNeXc2bWczbGh6SktsMHMwczJJcGRnZlRCbjNFNTNTYnNLWGtpNThueDBHdExMOUt4bDlXS0taclJnWE1xdWh5eEo4VHllcTRRdw?oc=5','_blank')">
-      <div style="width:38px;min-width:38px;height:38px;background:var(--azul-bg);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">✝️</div>
-      <div style="flex:1;min-width:0;">
-        <div style="font-size:12px;font-weight:700;color:#1C1C2E;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Brasil Paralelo entrevista ministro do STF em novo documentário</div>
-        <div style="font-size:10px;color:var(--ouro);font-weight:700;margin-top:3px;">Brasil Paralelo · 17 de jun., 19:36</div>
-      </div>
-    </div>
     <div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;" onclick="window.open('https://news.google.com/rss/articles/CBMinAFBVV95cUxNRXZsdGEzcUlVUHBpWTd2MjdDQ1BfcVk4ZTF3eEpmYWYzMVRWcThxbTVzZWFTeU56M1BLMWNqc3EteTliQjRZT0hWY1hRRzdicGZOcWUydzdDNVp4QVRVbmptUm51Zjd6WXVMN2tUbG9XMTU0TDh1T2NOVFBfNE1fNEtBVXlhczJBemhUZUFjRUxmdXlQeVBIdVctUXI?oc=5','_blank')">
       <div style="width:38px;min-width:38px;height:38px;background:var(--azul-bg);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">✝️</div>
       <div style="flex:1;min-width:0;">
         <div style="font-size:12px;font-weight:700;color:#1C1C2E;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Desgastado, Flávio Bolsonaro já é visto como um "falso evangélico"</div>
         <div style="font-size:10px;color:var(--ouro);font-weight:700;margin-top:3px;">Brasil 247 · 14 de jun., 13:41</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;" onclick="window.open('https://news.google.com/rss/articles/CBMipAFBVV95cUxOMG1hdDk4bGt1Nk14MWdaMVZxa1d4LTloSkhHSGxKWHVQbzUwZ2ItYmZtSTM3dmdXbWRLRC1YeVIyOWx3T1I1cnJOX0NHQW9uOW1tZlpSWUd6RXBDZGJVODhwZERfZTJ6Z3FQQkU2M3R6UWNBVjNBXzdHRFltZUFsZ2toV2FYZEczUHMxbG96VFlIb2taRXA0cE8tRHIwNXo0cVRveQ?oc=5','_blank')">
+      <div style="width:38px;min-width:38px;height:38px;background:var(--azul-bg);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">✝️</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:12px;font-weight:700;color:#1C1C2E;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Escândalos fazem Flávio Bolsonaro despencar entre evangélicos |</div>
+        <div style="font-size:10px;color:var(--ouro);font-weight:700;margin-top:3px;">Intercept Brasil · 13 de jun., 10:00</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;" onclick="window.open('https://news.google.com/rss/articles/CBMibkFVX3lxTE1uTk9WUHhSZVVWVkVuQnNxa0VseUQyd2l1ZjA1bUdsNzMtSF9wMnpxTVVqcDRZOVRtdmlQaWhua0pMcUpDc0JMNWlELUlIQ085Z3ZuX1V5N0ROOVp0UFJrQV84b3VUQ3FBZUhEWTJ3?oc=5','_blank')">
+      <div style="width:38px;min-width:38px;height:38px;background:var(--azul-bg);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">✝️</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:12px;font-weight:700;color:#1C1C2E;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Maioria evangélica: veja a religião dos convocados do Brasil</div>
+        <div style="font-size:10px;color:var(--ouro);font-weight:700;margin-top:3px;">comunhao.com.br · 12 de jun., 11:00</div>
       </div>
     </div></div>
       <div style="text-align:right;margin-top:4px;">
@@ -2768,7 +2768,7 @@ window.addEventListener('load', () => {
 
   <div style="margin-top:16px;margin-bottom:20px;">
     
-    <div id="ultima-sync-label" style="text-align:center;font-size:11px;color:#888;margin-top:6px;">🕐 Última sincronização: 18/06/2026, 22:13:46</div>
+    <div id="ultima-sync-label" style="text-align:center;font-size:11px;color:#888;margin-top:6px;">🕐 Última sincronização: 19/06/2026, 08:24:42</div>
   </div>
 
   <div class="stats-grid" id="admindash-stats">
@@ -2886,7 +2886,7 @@ window.addEventListener('load', () => {
   <div id="gospel-status-bar" style="display:flex;align-items:center;justify-content:space-between;background:white;border-radius:12px;padding:12px 16px;margin-bottom:16px;border:1px solid var(--borda);box-shadow:var(--shadow);">
     <div style="display:flex;align-items:center;gap:8px;">
       <div id="gospel-status-dot" style="width: 8px; height: 8px; border-radius: 50%; background: rgb(76, 175, 80);"></div>
-      <span id="gospel-status-text" style="font-size:12px;color:var(--cinza);">30 notícias · 22:13</span>
+      <span id="gospel-status-text" style="font-size:12px;color:var(--cinza);">30 notícias · 08:24</span>
     </div>
     <button onclick="carregarNoticiasGospel()" style="background:none;border:1px solid var(--borda);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;color:var(--azul-mid);cursor:pointer;">↻ Atualizar</button>
   </div>
@@ -2913,34 +2913,6 @@ window.addEventListener('load', () => {
 
   <!-- LISTA DE NOTÍCIAS -->
   <div id="gospel-lista">
-    <div class="card" style="display:flex;gap:0;padding:0;overflow:hidden;cursor:pointer;transition:all .2s;margin-bottom:12px;" onclick="window.open('https://news.google.com/rss/articles/CBMiogFBVV95cUxNQWNhMkNXYWxjbVA1LW81YXdLWXVhek02elpYaHdXQXRkcjJqSC0yQnZ4UFNaaHVKVVAybS1MSDUxa2tHQ0FsbzhqTFZPbllSYXAxWW1QUVVzZVo1MDYyS1NwalBYXzBjc2ZvY0VGei1wS3BkSXpCYnh1V1BVOGpCRVV0cmZrNU5hVkd0NnNNTkNXRDFlSXZqTUxadGRrZ1lqQWc?oc=5','_blank')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-      <div style="min-width:72px;width:72px;background:linear-gradient(135deg,var(--azul-bg),#c8daf5);display:flex;align-items:center;justify-content:center;font-size:30px;">✝️</div>
-      <div style="padding:12px 14px;flex:1;min-width:0;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
-          <span style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--ouro);">Exibir Gospel</span>
-          <span style="font-size:10px;color:#BBB;">18 de jun., 03:41</span>
-        </div>
-        <h4 style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:#1C1C2E;line-height:1.35;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Kaká abre desafio bíblico da YouVersion durante a Copa do Mundo de 2026</h4>
-        <p style="font-size:11px;color:#AAA;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
-Kaká abre desafio bíblico da YouVersion durante a Copa do Mundo de 2026&nbsp;&nbsp;Exibir Gospel</p>
-        <div style="margin-top:8px;font-size:10px;font-weight:700;color:var(--azul-lite);">Ler matéria completa →</div>
-      </div>
-    </div>
-  
-    <div class="card" style="display:flex;gap:0;padding:0;overflow:hidden;cursor:pointer;transition:all .2s;margin-bottom:12px;" onclick="window.open('https://news.google.com/rss/articles/CBMiqgFBVV95cUxNclJXb3MxU0hLS2FsYldISnRNQ2x0UVFEN1BIRGZDTlRHNk9Fc2t4RXdHUktTY05EVmxnczFpS2oycjVKOW9uMS1RY3NKaG1vbVJHeFRPTHcya29sZXJPZWZNeXc2bWczbGh6SktsMHMwczJJcGRnZlRCbjNFNTNTYnNLWGtpNThueDBHdExMOUt4bDlXS0taclJnWE1xdWh5eEo4VHllcTRRdw?oc=5','_blank')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-      <div style="min-width:72px;width:72px;background:linear-gradient(135deg,var(--azul-bg),#c8daf5);display:flex;align-items:center;justify-content:center;font-size:30px;">✝️</div>
-      <div style="padding:12px 14px;flex:1;min-width:0;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
-          <span style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--ouro);">Brasil Paralelo</span>
-          <span style="font-size:10px;color:#BBB;">17 de jun., 19:36</span>
-        </div>
-        <h4 style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:#1C1C2E;line-height:1.35;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Brasil Paralelo entrevista ministro do STF em novo documentário</h4>
-        <p style="font-size:11px;color:#AAA;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
-Brasil Paralelo entrevista ministro do STF em novo documentário&nbsp;&nbsp;Brasil Paralelo</p>
-        <div style="margin-top:8px;font-size:10px;font-weight:700;color:var(--azul-lite);">Ler matéria completa →</div>
-      </div>
-    </div>
-  
     <div class="card" style="display:flex;gap:0;padding:0;overflow:hidden;cursor:pointer;transition:all .2s;margin-bottom:12px;" onclick="window.open('https://news.google.com/rss/articles/CBMinAFBVV95cUxNRXZsdGEzcUlVUHBpWTd2MjdDQ1BfcVk4ZTF3eEpmYWYzMVRWcThxbTVzZWFTeU56M1BLMWNqc3EteTliQjRZT0hWY1hRRzdicGZOcWUydzdDNVp4QVRVbmptUm51Zjd6WXVMN2tUbG9XMTU0TDh1T2NOVFBfNE1fNEtBVXlhczJBemhUZUFjRUxmdXlQeVBIdVctUXI?oc=5','_blank')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
       <div style="min-width:72px;width:72px;background:linear-gradient(135deg,var(--azul-bg),#c8daf5);display:flex;align-items:center;justify-content:center;font-size:30px;">✝️</div>
       <div style="padding:12px 14px;flex:1;min-width:0;">
@@ -3053,6 +3025,20 @@ Nigéria condena à morte quatro suspeitos de massacre em igreja católica&nbsp;
       </div>
     </div>
   
+    <div class="card" style="display:flex;gap:0;padding:0;overflow:hidden;cursor:pointer;transition:all .2s;margin-bottom:12px;" onclick="window.open('https://news.google.com/rss/articles/CBMihAJBVV95cUxQYVRib3JaR1JkenlIckdESThPTnlRWjdVb09xaGM5c0lval9WbWl1NlFrbmRLTkR6RmpqQmdXeC03QU9Xc0FrT2tSLVMyVW5TMmhQYnlDa2tpVHNDRS1RdkhMZHBRTm0xLTlQNWJ1LThpUlE3R29QNTVsNDFNQzBsYTN0NkRxSVZPQmVQa1BpNldUYzNtT0RlZU1zMnhwMjhid0tTMTBfbWh6UGNWRVBPT2dXWHVUall2aEt4ZC1fU0NSb2g3WVg4a3FpQVBrN0E2NlNtWXQ2VUZ2cHBsdl9sWFR5dUNDYlNBd09kam9lQXY2RUM5dmdGSkg0Vk1nSzVUQUY5Zg?oc=5','_blank')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+      <div style="min-width:72px;width:72px;background:linear-gradient(135deg,var(--azul-bg),#c8daf5);display:flex;align-items:center;justify-content:center;font-size:30px;">✝️</div>
+      <div style="padding:12px 14px;flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+          <span style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--ouro);">Partido dos Trabalhadores</span>
+          <span style="font-size:10px;color:#BBB;">07 de jun., 07:00</span>
+        </div>
+        <h4 style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:#1C1C2E;line-height:1.35;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">IV Encontro Nacional de Evangélicos e Evangélicas do PT fortalece diálogo, democracia e construção de uma frente ampla evangélica no Brasil</h4>
+        <p style="font-size:11px;color:#AAA;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
+IV Encontro Nacional de Evangélicos e Evangélicas do PT fortalece diálogo, democracia e construção de uma frente ampla evangélica no Brasil&nbsp;&nbsp;Partido dos Trabalhadores</p>
+        <div style="margin-top:8px;font-size:10px;font-weight:700;color:var(--azul-lite);">Ler matéria completa →</div>
+      </div>
+    </div>
+  
     <div class="card" style="display:flex;gap:0;padding:0;overflow:hidden;cursor:pointer;transition:all .2s;margin-bottom:12px;" onclick="window.open('https://news.google.com/rss/articles/CBMixwFBVV95cUxPX1lQSlJYZlpZd3VUelEteGlnazd6eFZwaGwzUTVLenVxSHY3bS1JQzFrX3d2NERvcXRhc0tGdmdWRGk0bktGQXBmMVNPdnVlYVVSclZIZHVvMUpJSWNvaEtOWHBDN2RnZVpOSkV5SGJKYUdDSUhIRDJWZzM3ZGNadmsxOUdGUEJiTndidkJiLThVcHZsNjVvV05XQlNfS3NDdTNMWngtcWRsM01vOWZpM1FjNmRtTzBzZ0V1czgxSk1WQ1hzMjJn?oc=5','_blank')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
       <div style="min-width:72px;width:72px;background:linear-gradient(135deg,var(--azul-bg),#c8daf5);display:flex;align-items:center;justify-content:center;font-size:30px;">✝️</div>
       <div style="padding:12px 14px;flex:1;min-width:0;">
@@ -3067,20 +3053,6 @@ Brasil Paralelo anuncia novo documentário sobre o crescimento dos evangélicos 
       </div>
     </div>
   
-    <div class="card" style="display:flex;gap:0;padding:0;overflow:hidden;cursor:pointer;transition:all .2s;margin-bottom:12px;" onclick="window.open('https://news.google.com/rss/articles/CBMimAFBVV95cUxQWEQ3RWpqMWRtVy14ZDRmdE9FTUk4SzZya1B3bHpvTnUyOVVZZU9EUHJfUDMwMk1kQTJIbVdqOGJSbGhwQWt0Z0lfTnZWYThuUXcyRlU2SE9uMzFwSXpSdkgwQmZLTDhsYnpXWHNMQ2RyUW83MlRfdjRTWFUzRU5Lc0dPcW9BbVBwbi1BUllOaFZ5SnJFZnZhUA?oc=5','_blank')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-      <div style="min-width:72px;width:72px;background:linear-gradient(135deg,var(--azul-bg),#c8daf5);display:flex;align-items:center;justify-content:center;font-size:30px;">✝️</div>
-      <div style="padding:12px 14px;flex:1;min-width:0;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
-          <span style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--ouro);">Diplomatique</span>
-          <span style="font-size:10px;color:#BBB;">03 de jun., 18:56</span>
-        </div>
-        <h4 style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:#1C1C2E;line-height:1.35;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Os 120 anos do pentecostalismo e sua ascensão política no Brasil</h4>
-        <p style="font-size:11px;color:#AAA;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
-Os 120 anos do pentecostalismo e sua ascensão política no Brasil&nbsp;&nbsp;Diplomatique</p>
-        <div style="margin-top:8px;font-size:10px;font-weight:700;color:var(--azul-lite);">Ler matéria completa →</div>
-      </div>
-    </div>
-  
     <div class="card" style="display:flex;gap:0;padding:0;overflow:hidden;cursor:pointer;transition:all .2s;margin-bottom:12px;" onclick="window.open('https://news.google.com/rss/articles/CBMikgFBVV95cUxORldKZUYyZERMMjViRnpQQWVqaUVrNVRYTHBLLTc0dnpqT1ZfUGR6T0pfcVpwYk5WYWp2Y1JWRTc4RmNLdVNMdTlRMVRua1VNbURLM2JNUFpJOVg0RDl0QXJGMlItYjFLamFreXBZZUl5emNzMHJiNjEwNzBrUElHZFdMdDNiaEpWNkozZ1JjMEZ1UQ?oc=5','_blank')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
       <div style="min-width:72px;width:72px;background:linear-gradient(135deg,var(--azul-bg),#c8daf5);display:flex;align-items:center;justify-content:center;font-size:30px;">✝️</div>
       <div style="padding:12px 14px;flex:1;min-width:0;">
@@ -3091,6 +3063,20 @@ Os 120 anos do pentecostalismo e sua ascensão política no Brasil&nbsp;&nbsp;Di
         <h4 style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:#1C1C2E;line-height:1.35;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Dossiê expõe conivência de igrejas protestantes com a escravidão no Brasil</h4>
         <p style="font-size:11px;color:#AAA;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
 Dossiê expõe conivência de igrejas protestantes com a escravidão no Brasil&nbsp;&nbsp;Alma Preta Jornalismo</p>
+        <div style="margin-top:8px;font-size:10px;font-weight:700;color:var(--azul-lite);">Ler matéria completa →</div>
+      </div>
+    </div>
+  
+    <div class="card" style="display:flex;gap:0;padding:0;overflow:hidden;cursor:pointer;transition:all .2s;margin-bottom:12px;" onclick="window.open('https://news.google.com/rss/articles/CBMimAFBVV95cUxQWEQ3RWpqMWRtVy14ZDRmdE9FTUk4SzZya1B3bHpvTnUyOVVZZU9EUHJfUDMwMk1kQTJIbVdqOGJSbGhwQWt0Z0lfTnZWYThuUXcyRlU2SE9uMzFwSXpSdkgwQmZLTDhsYnpXWHNMQ2RyUW83MlRfdjRTWFUzRU5Lc0dPcW9BbVBwbi1BUllOaFZ5SnJFZnZhUA?oc=5','_blank')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+      <div style="min-width:72px;width:72px;background:linear-gradient(135deg,var(--azul-bg),#c8daf5);display:flex;align-items:center;justify-content:center;font-size:30px;">✝️</div>
+      <div style="padding:12px 14px;flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+          <span style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--ouro);">Diplomatique</span>
+          <span style="font-size:10px;color:#BBB;">03 de jun., 07:00</span>
+        </div>
+        <h4 style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:#1C1C2E;line-height:1.35;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Os 120 anos do pentecostalismo e sua ascensão política no Brasil</h4>
+        <p style="font-size:11px;color:#AAA;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
+Os 120 anos do pentecostalismo e sua ascensão política no Brasil&nbsp;&nbsp;Diplomatique</p>
         <div style="margin-top:8px;font-size:10px;font-weight:700;color:var(--azul-lite);">Ler matéria completa →</div>
       </div>
     </div>
@@ -3179,16 +3165,16 @@ A missão evangelizadora da Igreja no Brasil: uma voz profética&nbsp;&nbsp;Vati
       </div>
     </div>
   
-    <div class="card" style="display:flex;gap:0;padding:0;overflow:hidden;cursor:pointer;transition:all .2s;margin-bottom:12px;" onclick="window.open('https://news.google.com/rss/articles/CBMi9AFBVV95cUxNTko5SUw2cVZOR0F2NDc2Ukg5TEN0QUxLcW5KTU5vSmhHaEFuR0ptT2hqcXc5a2thOVVSQUtteXlhaDdkcTNieGdFX1NBRklNQlZKQXhtRkJoZm1MOE9kaEExZ2Q1TTNzaHgxbExqUG5CTXd3cTcyS2JlLWdVSGc2aEsxX0NWQ1lSbElsUEVVNFd2OGs2cVBXY2V4Uk9JQmV2WUZtb2dsT2xnTFZSODl1cl90b0hmb2dLQ0VUZWVNX0R4UkNMR0R6MlY5YU8wclI2NjNNWlJmRTVHY19PbENwZFlnYUU5dnJBSko0bDJPajJKMTFH0gH6AUFVX3lxTE43ZjhLOFV3MWpVMzdZWXhKOTh1SWtxMVVNRk9kNWFfbWwyeHdtOVczQ2NBTTdxeWpneTNmZVRNR0xxbGZCMFV4aTN5RlJLXzFpb0UtSTlGSUtCUktYc3cxd1FFWFpaRkJ1cVZqeG9VQlR4SmlPM0t0NkV5Ni16YkFSaENWS3pNdnV3M1liVDRaQ2dhWmVZbWtud29rMzRaY2lJTk84RjJqU3ZzeHdPTFlRQmNFRDhhZVlUWU54bkNMSGozTjV2bGgzX3VhTWpKekxpalBNZHF2MGhuWWt0bXBBRUlkNVBmb3VkdU5VOHhLZkdHRm93ZjEwaWc?oc=5','_blank')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-      <div style="min-width:72px;width:72px;background:linear-gradient(135deg,var(--azul-bg),#c8daf5);display:flex;align-items:center;justify-content:center;font-size:30px;">📖</div>
+    <div class="card" style="display:flex;gap:0;padding:0;overflow:hidden;cursor:pointer;transition:all .2s;margin-bottom:12px;" onclick="window.open('https://news.google.com/rss/articles/CBMiowFBVV95cUxOeU42bm1leEdzZlYxLVlRWmI1QzNMdDBaVWRrS3RCOGtrdm5WRkVibS1PclVXQV9xRllhRUllWWdQYmRMaWU3R1hHd08tVGRyck5BTEE0MF9ZbnhHaVBHSXhvWWZReE5vczkwSUVNQUNfVmZGNnJFRTl6OXhHbWxTdUtkZDJwTElBN1F6dC1mZ3EzM18ySnVYNE9YVXo1YVRMZDE4?oc=5','_blank')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+      <div style="min-width:72px;width:72px;background:linear-gradient(135deg,var(--azul-bg),#c8daf5);display:flex;align-items:center;justify-content:center;font-size:30px;">✝️</div>
       <div style="padding:12px 14px;flex:1;min-width:0;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
-          <span style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--ouro);">Folha de S.Paulo</span>
-          <span style="font-size:10px;color:#BBB;">12 de mar., 07:00</span>
+          <span style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--ouro);">Exibir Gospel</span>
+          <span style="font-size:10px;color:#BBB;">11 de fev., 08:00</span>
         </div>
-        <h4 style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:#1C1C2E;line-height:1.35;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Sem pastores midiáticos e discreta: a igreja evangélica que exporta músicos para as principais orquestras do país</h4>
+        <h4 style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:#1C1C2E;line-height:1.35;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Yudi Tamashiro relata vida sem fama no Japão e diz sentir “paz gigantesca”</h4>
         <p style="font-size:11px;color:#AAA;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
-Sem pastores midiáticos e discreta: a igreja evangélica que exporta músicos para as principais orquestras do país&nbsp;&nbsp;Folha de S.Paulo</p>
+Yudi Tamashiro relata vida sem fama no Japão e diz sentir “paz gigantesca”&nbsp;&nbsp;Exibir Gospel</p>
         <div style="margin-top:8px;font-size:10px;font-weight:700;color:var(--azul-lite);">Ler matéria completa →</div>
       </div>
     </div>
@@ -3203,6 +3189,20 @@ Sem pastores midiáticos e discreta: a igreja evangélica que exporta músicos p
         <h4 style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:#1C1C2E;line-height:1.35;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Yudi diz que se afastou do mundo gospel: ‘Sempre tive aplausos e isso estava se repetindo’</h4>
         <p style="font-size:11px;color:#AAA;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
 Yudi diz que se afastou do mundo gospel: ‘Sempre tive aplausos e isso estava se repetindo’&nbsp;&nbsp;Guiame</p>
+        <div style="margin-top:8px;font-size:10px;font-weight:700;color:var(--azul-lite);">Ler matéria completa →</div>
+      </div>
+    </div>
+  
+    <div class="card" style="display:flex;gap:0;padding:0;overflow:hidden;cursor:pointer;transition:all .2s;margin-bottom:12px;" onclick="window.open('https://news.google.com/rss/articles/CBMiYkFVX3lxTFB4cnI4NDlqUlpOemx3VWFaMzY1ckdINy0zSFYzRWR3d1NEbzBBRnQyelAwTzViYklzdVNfZjU3MnMzaTBYNjFodlAxVVJJT0pEVkZXbGM3bFJMQUJSd2tsQXF30gFnQVVfeXFMT1BiZmtsSGdxenY0eXRVZXF6ZkdxM0Q3dm9QcV9aNmNIZEdwb2xleG9abWlRczZZNXB1NEY2OGlQOElmVHFfQW1XX21UenJKeXg2OVRqQTBKcXJpMnVNNE9EUGVUNWw4WQ?oc=5','_blank')" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+      <div style="min-width:72px;width:72px;background:linear-gradient(135deg,var(--azul-bg),#c8daf5);display:flex;align-items:center;justify-content:center;font-size:30px;">✝️</div>
+      <div style="padding:12px 14px;flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+          <span style="font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--ouro);">BBC</span>
+          <span style="font-size:10px;color:#BBB;">07 de fev., 08:00</span>
+        </div>
+        <h4 style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:#1C1C2E;line-height:1.35;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">'A história da Igreja Católica, em grande parte, é a história da perversão do cristianismo', diz Javier Cercas</h4>
+        <p style="font-size:11px;color:#AAA;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
+'A história da Igreja Católica, em grande parte, é a história da perversão do cristianismo', diz Javier Cercas&nbsp;&nbsp;BBC</p>
         <div style="margin-top:8px;font-size:10px;font-weight:700;color:var(--azul-lite);">Ler matéria completa →</div>
       </div>
     </div>
@@ -3396,8 +3396,8 @@ A Congregação Cristã no Brasil (CCB) tem a segunda maior Orquestra do mundo&n
   <div class="page-header"><h1>Meu Perfil</h1><p>Seus dados cadastrados na congregação</p></div>
 
   <div class="versiculo-card" id="versiculo-do-dia">
-    <div class="vtext" id="vtext">"Entrega o teu caminho ao Senhor; confia nele, e o mais ele fará."</div>
-    <div class="vref" id="vref">— Salmos 37:5</div>
+    <div class="vtext" id="vtext">"O nome do Senhor é uma torre forte; o justo corre para ela e fica seguro."</div>
+    <div class="vref" id="vref">— Provérbios 18:10</div>
   </div>
 
   <!-- ABAS DO PERFIL -->
@@ -3722,7 +3722,7 @@ Campo Sul" oninput="salvarListasAdmin()" style="min-height:110px;"></textarea></
       <button onclick="liberarPlanoManual(10)" style="padding:12px 8px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.7);font-size:12px;font-weight:700;cursor:pointer;transition:.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
         🆓 Gratuito<br><span style="font-weight:400;font-size:10px;opacity:0.5;">10 membros</span>
       </button>
-      <button onclick="liberarPlanoManual(50)" style="padding:12px 8px;border-radius:10px;border:1.5px solid rgba(99,102,241,0.4);background:rgba(99,102,241,0.08);color:#a5b4fc;font-size:12px;font-weight:700;cursor:pointer;transition:.2s;" onmouseover="this.style.background='rgba(99,102,241,0.18)'" onmouseout="this.style.background='rgba(99,102,241,0.08)'">
+      <button onclick="liberarPlanoManual(50)" style="padding: 12px 8px; border-radius: 10px; border: 1.5px solid rgba(99, 102, 241, 0.4); background: rgba(99, 102, 241, 0.08); color: rgb(165, 180, 252); font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.2s;" onmouseover="this.style.background='rgba(99,102,241,0.18)'" onmouseout="this.style.background='rgba(99,102,241,0.08)'">
         👥 Comunidade<br><span style="font-weight:400;font-size:10px;opacity:0.6;">50 membros · R$79,90</span>
       </button>
       <button onclick="liberarPlanoManual(100)" style="padding:12px 8px;border-radius:10px;border:1.5px solid rgba(240,192,64,0.4);background:rgba(240,192,64,0.08);color:#f0c040;font-size:12px;font-weight:700;cursor:pointer;transition:.2s;" onmouseover="this.style.background='rgba(240,192,64,0.15)'" onmouseout="this.style.background='rgba(240,192,64,0.08)'">
@@ -3744,7 +3744,7 @@ Campo Sul" oninput="salvarListasAdmin()" style="min-height:110px;"></textarea></
         <div style="font-size:12px;color:#6ee7b7;font-weight:600;">congregacaoefraimrealengo-netizen / Igrejaappnew</div>
         <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:2px;">branch: main → index.html</div>
       </div>
-      <button onclick="atualizarSistemaGitHub()" id="btn-github-deploy" style="width: 100%; padding: 13px; border-radius: 10px; border: 1.5px solid rgba(52, 211, 153, 0.4); background: rgba(52, 211, 153, 0.1); color: rgb(110, 231, 183); font-size: 13px; font-weight: 700; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; opacity: 1;" onmouseover="this.style.background='rgba(52,211,153,0.2)'" onmouseout="this.style.background='rgba(52,211,153,0.1)'">
+      <button onclick="atualizarSistemaGitHub()" id="btn-github-deploy" style="width: 100%; padding: 13px; border-radius: 10px; border: 1.5px solid rgba(52, 211, 153, 0.4); background: rgba(52, 211, 153, 0.2); color: rgb(110, 231, 183); font-size: 13px; font-weight: 700; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; opacity: 1;" onmouseover="this.style.background='rgba(52,211,153,0.2)'" onmouseout="this.style.background='rgba(52,211,153,0.1)'">
         <span id="btn-github-deploy-icon">📤</span>
         <span id="btn-github-deploy-label">Publicar Versão Atual</span>
       </button>
@@ -8278,4 +8278,5 @@ async function atualizarSistemaGitHub() {
 </script>
 
 
-<div id="give-freely-root-ejkiikneibegknkgimmihdpcbcedgmpo" class="give-freely-root" data-extension-id="ejkiikneibegknkgimmihdpcbcedgmpo" data-extension-name="Volume Booster" style="display: block;"></div></body></html>
+<div id="give-freely-root-ejkiikneibegknkgimmihdpcbcedgmpo" class="give-freely-root" data-extension-id="ejkiikneibegknkgimmihdpcbcedgmpo" data-extension-name="Volume Booster" style="display: block;"></div>
+</body></html>
