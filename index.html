@@ -3582,7 +3582,7 @@ let LS_KEY_CONF  = LS_KEY_CONF_BASE + 'global';
 // ═══════════════════════════════════════════
 //  SINCRONIZAÇÃO (Google Apps Script)
 // ═══════════════════════════════════════════
-let GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzzdjojwKLUduRHntZ4FJeHWXvtCtVOUwmrAHX0pfi-jIkHkhU_hKsmivRKB9qQDg0IlA/exec';
+let GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzSYONhXcwnddRw1C1h_VG_U1gRQIu-qvdr5I0k2dOw3msHwFRe1fbeoO7vUADIrfcZuw/exec';
 let IS_SYNCING = false;
 let ULTIMA_SYNC_PULL_OK = false;
 let syncInicialPromise = null;
@@ -7739,7 +7739,7 @@ async function atualizarSistemaGitHub() {
 
     const resp = await fetch(GAS_WEBAPP_URL + '?action=github_push', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify(payload)
     });
 
